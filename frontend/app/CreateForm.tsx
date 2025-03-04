@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Switch, ScrollView } from 'react-native';
-import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import ProfileCom from '@/components/ProfileCom';
-import QuesBoxCom from '@/components/QuesBoxCom';
-
-// Define your stack params
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import ProfileCom from "@/components/ProfileCom";
+import QuesBoxCom from "@/components/QuesBoxCom";
+import PeopleInfoCom from "@/components/PeopleInfoCom";
 type RootStackParamList = {
-  CreateForm: undefined;
   HomeScreen: undefined;
+  CreateForm: undefined;
 };
 
-// Define the props for navigation
-type Props = NativeStackScreenProps<RootStackParamList, 'CreateForm'>;
+type Props = NativeStackScreenProps<RootStackParamList, "CreateForm">;
 
 const CreateForm: React.FC<Props> = ({ navigation }) => {
   const [isRequired, setIsRequired] = useState(false);
@@ -43,7 +47,7 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
         {/* Publish Button */}
         <TouchableOpacity
           className="bg-yellow-400 px-4 py-2 rounded-lg ml-16"
-          onPress={() => alert('Published!')}
+          onPress={() => alert("Published!")}
         >
           <Text className="text-black font-bold">Publish</Text>
         </TouchableOpacity>
@@ -54,13 +58,17 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
 
       <ScrollView className="px-4">
         {/* Survey Title Input */}
-        <View className="mt-4 bg-white p-4 rounded-lg shadow-md gap-4">
+        <View className="mt-2 bg-white p-4 rounded-lg shadow-md gap-4">
           <TextInput
             placeholder="Survey title"
             placeholderTextColor="white"
             className="bg-purple-600 text-white text-center py-3 rounded-lg"
           />
         </View>
+
+        {/* People information section */}
+        <PeopleInfoCom />
+
         {/* Survey Name and Details Input */}
         <View className="mt-4 bg-white p-4 rounded-lg shadow-md gap-4">
           <TextInput
@@ -74,118 +82,21 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
           />
         </View>
 
-        {/* Question Section 1st */}
-        <View className="mt-6 bg-white p-4 rounded-lg shadow-md">
-          <TextInput
-            placeholder="Write Question here"
-            className="text-black text-xl font-bold"
-          />
-        </View>
-
-        {/* Options Section */}
-        <View className="bg-white p-4 mt-4 rounded-lg space-y-3 shadow-md">
-          {/* Question Type Dropdown */}
-          <View className="flex-row items-center justify-between">
-            <Text className="text-black font-bold">Multiple choice</Text>
-            <Ionicons name="chevron-down" size={24} color="black" />
-          </View>
-
-          {/* Options */}
-          <TouchableOpacity className="flex-row items-center">
-            <Ionicons name="radio-button-off" size={24} color="black" />
-            <Text className="ml-2 text-black">Add Option</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center">
-            <Ionicons name="radio-button-off" size={24} color="black" />
-            <Text className="ml-2 text-black">Add Option</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center">
-            <Ionicons name="radio-button-off" size={24} color="black" />
-            <Text className="ml-2 text-black">Add Option</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center">
-            <Ionicons name="radio-button-off" size={24} color="black" />
-            <Text className="ml-2 text-black">Add Option</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Required Toggle */}
-        <View className="mt-4 flex-row justify-between items-center">
-          <MaterialIcons name="content-copy" size={24} color="black" />
-          <View className="flex-row items-center space-x-2">
-            <Text className="text-slate-900 font-bold">Required</Text>
-            <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
-              trackColor={{ true: '#69fffd', false: '#ccc' }}
-            />
-          </View>
-          <TouchableOpacity>
-            <Ionicons name="trash" size={24} color="red" />
-          </TouchableOpacity>   
-        </View>
-         {/* Question Section 2nd */}
-         <View className="mt-6 bg-white p-4 rounded-lg shadow-md">
-          <TextInput
-            placeholder="Write Question here"
-            className="text-black text-xl font-bold"
-          />
-        </View>
-
-        {/* Options Section */}
-        <View className="bg-white p-4 mt-4 rounded-lg space-y-3 shadow-md">
-          {/* Question Type Dropdown */}
-          <View className="flex-row items-center justify-between">
-            <Text className="text-black font-bold">Multiple choice</Text>
-            <Ionicons name="chevron-down" size={24} color="black" />
-          </View>
-
-          {/* Options */}
-          <TouchableOpacity className="flex-row items-center">
-            <Ionicons name="radio-button-off" size={24} color="black" />
-            <Text className="ml-2 text-black">Add Option</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center">
-            <Ionicons name="radio-button-off" size={24} color="black" />
-            <Text className="ml-2 text-black">Add Option</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center">
-            <Ionicons name="radio-button-off" size={24} color="black" />
-            <Text className="ml-2 text-black">Add Option</Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-row items-center">
-            <Ionicons name="radio-button-off" size={24} color="black" />
-            <Text className="ml-2 text-black">Add Option</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Required Toggle */}
-        <View className="mt-4 flex-row justify-between items-center">
-          <MaterialIcons name="content-copy" size={24} color="black" />
-          <View className="flex-row items-center space-x-2">
-            <Text className="text-slate-900 font-bold">Required</Text>
-            <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
-              trackColor={{ true: '#69fffd', false: '#ccc' }}
-            />
-          </View>
-          <TouchableOpacity>
-            <Ionicons name="trash" size={24} color="red" />
-          </TouchableOpacity>   
-        </View>
-        <QuesBoxCom/>
+        {/* Question Sections */}
+        <QuesBoxCom />
+        <QuesBoxCom />
+        <QuesBoxCom />
       </ScrollView>
 
       {/* Bottom Navigation */}
       <View className="flex-row justify-between items-center bg-purple-500 p-4 shadow-lg">
-        <TouchableOpacity onPress={() => alert('Tooltip selected')}>
+        <TouchableOpacity onPress={() => alert("TitleBar Copy")}>
           <Text className="text-white text-lg font-bold">TT</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => alert("QuestionBox With Option Copy")}>
           <FontAwesome name="plus-circle" size={30} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
           <FontAwesome name="home" size={30} color="white" />
         </TouchableOpacity>
         <TouchableOpacity>

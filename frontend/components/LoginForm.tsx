@@ -21,52 +21,41 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   // Handle login validation
-  const handleLogin =async () =>{
+  const handleLogin = async () => {
     try {
       setLoading(true);
       if (!email.trim() || !password.trim()) {
         Alert.alert("Error", "Please enter both email and password");
         setLoading(false);
         return;
-    } 
-    
-    setLoading(false);
-     const { data } = await axios.post(
-      "http://192.168.0.197:8082/api/v1/auth/login",
-      {email,password}
-    );
+      }
 
-    alert(data && data.message);
-    console.log("Login data==>",{email,password});
-    router.push("/HomeScreen"); // Navigate to Home
-  }
-  catch (error) {
-    if (axios.isAxiosError(error)) {
-      Alert.alert("Error","Invalid email or password");
-    } else {
-      Alert.alert("Error", "An unexpected error occurred");
+      setLoading(false);
+      const { data } = await axios.post(
+        "http://192.168.0.189:8082/api/v1/auth/login",
+        { email, password }
+      );
+
+      alert(data && data.message);
+      console.log("Login data==>", { email, password });
+      router.push("/HomeScreen"); // Navigate to Home
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        Alert.alert("Error", "Invalid email or password");
+      } else {
+        Alert.alert("Error", "An unexpected error occurred");
+      }
+      /* console.error(error); */
+    } finally {
+      setLoading(false);
     }
-    /* console.error(error); */
-  } finally {
-    setLoading(false);
-  }
     //console.log("Logging in with:", form);
-    
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-black justify-between pt-12 pb-6 px-6">
-      {/* Hero Image */}
-      <View className="relative">
-        <Image
-          source={require("../assets/images/Heroimg.png")} // Ensure path is correct
-          className="w-full h-60 rounded-3xl mb-4"
-          resizeMode="cover"
-        />
-      </View>
-
+    <SafeAreaView className="flex-1 bg-black justify-between">
       {/* Login Form */}
-      <View className="bg-purple-700 p-6 mx-none rounded-3xl shadow-lg flex-1 justify-center">
+      <View className="bg-purple-700 p-6 rounded-3xl shadow-lg flex-1 justify-center mt-6 ml-4 ">
         {/* Welcome Back Text */}
         <View className="items-center mb-8">
           <Text className="text-white text-4xl font-bold text-center">
@@ -109,9 +98,7 @@ export default function Login() {
           className="bg-yellow-400 py-3 rounded-full mb-4"
           onPress={handleLogin}
         >
-          <Text className="text-center text-black text-lg font-bold">
-            Login
-          </Text>
+          <Text className="text-center text-black text-lg font-bold">Login</Text>
         </TouchableOpacity>
 
         {/* Social Login */}

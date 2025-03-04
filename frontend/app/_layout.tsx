@@ -15,6 +15,11 @@ export default function RootLayout() {
         <Stack.Screen name="forgotpassword" options={{ headerShown: false }} />
         <Stack.Screen name="HomeScreen" options={{ headerShown: false }} />
         <Stack.Screen name="CreateForm" options={{ headerShown: false }} />
+        <Stack.Screen name="Template1" options={{ headerShown: false }} />
+        <Stack.Screen name="Template2" options={{ headerShown: false }} />
+        <Stack.Screen name="Template3" options={{ headerShown: false }} />
+        <Stack.Screen name="Template4" options={{ headerShown: false }} />
+        <Stack.Screen name="Template5" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

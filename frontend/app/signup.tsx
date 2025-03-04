@@ -35,7 +35,7 @@ export default function Signup() {
       }
 
       const { data } = await axios.post(
-        "http://192.168.0.197:8082/api/v1/auth/register",
+        "http://192.168.0.189:8082/api/v1/auth/register",
         { userName,email, contactNo, DOB, password, confirmPassword,role }
       );
 
@@ -59,7 +59,7 @@ export default function Signup() {
         className="flex-1"
       >
         {/* Top Section (20%) with Back Button */}
-        <View className="bg-slate-500 rounded-3xl h-[10%] px-6 justify-start mt-16 mb-6">
+        <View className="bg-slate-500 rounded-3xl h-[20%] px-6 justify-start mt-16 mb-6">
           <TouchableOpacity activeOpacity={0.7} className="mt-8" onPress={() => router.back()}>
             <Ionicons name="arrow-back" size={30} color="white" />
           </TouchableOpacity>

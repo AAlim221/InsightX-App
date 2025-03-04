@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Modal } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-//define types
-type RootStackParamList={
-    index: undefined;
-}
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 
+// Define types for navigation
+type RootStackParamList = {
+  index: undefined;  // Add more routes if needed
+};
 
+// Use the correct type for navigation
 const ProfileCom = () => {
   const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleLogout = () => {
     // Handle logout logic (e.g., clear token, session data)
-    navigation.navigate("index"); //  your route name  where to go
+    navigation.navigate("index");  // Make sure "index" matches your route name
   };
 
   return (
