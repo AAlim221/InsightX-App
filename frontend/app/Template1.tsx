@@ -1,151 +1,582 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Switch, ScrollView } from "react-native";
-import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Switch, ScrollView } from 'react-native';
+import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-
-type QuestionAnswers = {
-  [key: string]: string | null;
+// Define your stack params
+type RootStackParamList = {
+  Template1: undefined;
+  Home: undefined;
 };
 
-const Template1 = () => {
+// Define the props for navigation
+type Props = NativeStackScreenProps<RootStackParamList, 'Template1'>;
+
+const Template1: React.FC<Props> = ({ navigation }) => {
   const [isRequired, setIsRequired] = useState(false);
-
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedOption2, setSelectedOption2] = useState<number | null>(null);
+  const [selectedOption3, setSelectedOption3] = useState<number | null>(null);
+  const [selectedOption4, setSelectedOption4] = useState<number | null>(null);
+  const [selectedOption5, setSelectedOption5] = useState<number | null>(null);
+  const [selectedOption6, setSelectedOption6] = useState<number | null>(null);
+  const [selectedOption7, setSelectedOption7] = useState<number | null>(null);
+  const [selectedOption8, setSelectedOption8] = useState<number | null>(null);
+  const [selectedOption9, setSelectedOption9] = useState<number | null>(null);
+  const [selectedOption10, setSelectedOption10] = useState<number | null>(null);
   
-  const [selectedOptions, setSelectedOptions] = useState<QuestionAnswers>({
-    q1: null,
-    q2: null,
-    q3: null,
-    q4: null,
-    q5: null,
-  });
-
-  const handleSelect = (question: string, option: string) => {
-    setSelectedOptions((prevAnswers: QuestionAnswers) => ({
-      ...prevAnswers,
-      [question]: option,
-    }));
-  };
-
-  const questions = [
-    { id: "q1", text: "1. How satisfied are you with our products?", options: ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"] },
-    { id: "q2", text: "2. How would you rate the overall customer service experience?", options: ["Excellent", "Very Good", "Good", "Poor"] },
-    { id: "q3", text: "3. Do you think our product is a good value for the price?", options: ["Yes", "Somewhat", "Neutral", "Dissatisfied"] },
-    { id: "q4", text: "4. How satisfied are you with the delivery time or speed of service?", options: ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"] },
-    { id: "q5", text: "5. How easy was it to navigate our website or store to find the product/service you needed?", options: ["Very Easy", "Easy", "Neutral", "Difficult"] },
-    { id: "q6", text: "6. How likely are you to purchase from us again in the future?", options: ["Very Likely", "Likely", "Neutral", "Unlikely"] },
-  ];
 
   return (
     <SafeAreaView className="flex-1 bg-black">
       {/* Header Section */}
-      <View style={{ backgroundColor: "#30DCB7" }}className="px-4 pt-6 flex-row justify-between items-center">
-        <TouchableOpacity>
+      <View className="px-4 pt-6 flex-row justify-between items-center bg-[#A1E4F8] p-2">
+      
+        {/* Back Button */}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        {/* Undo/Redo and Theme Icons */}
         <View className="flex-row space-x-3">
+          <TouchableOpacity>
           <FontAwesome name="undo" size={24} color="black" />
+          </TouchableOpacity>
         </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-        <View className="flex-row space-x-3">
+        {/* Redo*/}
+        
+          <TouchableOpacity>
           <FontAwesome name="repeat" size={24} color="black" />
-        </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
+          </TouchableOpacity>
+        
+        
+        {/* Paintbrush */}
         <View className="flex-row space-x-3">
+          <TouchableOpacity>
           <FontAwesome name="paint-brush" size={24} color="black" />
+          </TouchableOpacity>
         </View>
-        </TouchableOpacity>
 
+        {/* Publish Button */}
         <TouchableOpacity className="bg-yellow-300 px-4 py-2 rounded-lg">
           <Text className="text-black font-bold">Publish</Text>
         </TouchableOpacity>
+        {/* User Profile Icon */}
         <TouchableOpacity>
           <FontAwesome name="user-circle" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
       <ScrollView className="px-4">
-        {/* Survey Title */}
-        <SafeAreaView style={{ backgroundColor: "#30DCB7" }} className="w-full min-h-[120px] mt-4 mb-4 rounded-lg 
-          flex items-center justify-center">
-            <View style={{ backgroundColor: "white" }} className="w-[90%] p-4 rounded-lg shadow mb-7">
-                <Text className="text-black text-center font-bold">Customer Review</Text>
-             </View>
-          </SafeAreaView>
+        {/* Survey Title Input */}
+        <View className="mt-6 p-4  bg-[#A1E4F8] rounded-lg">
+          <Text
+            className="bg-[#7DA5C1] font-bold text-white text-center py-2 rounded-lg">
+              Customer Review</Text>
+        </View>
 
-        {/* Survey Details */}
-        <SafeAreaView style={{ backgroundColor: "#30DCB7" }} className="w-full min-h-[160px] mt-4 rounded-lg flex items-center justify-center">
-          <View className="w-[90%] mt-2 space-y-2">
-           <Text style={{ backgroundColor: "white" }} className="text-black text-center font-bold py-4 px-4 rounded-lg">
-           Customer Satisfaction Survey
-           </Text>
-           </View>
-           <View className="w-[90%] mt-4 space-y-2 mb-6">
-           <Text style={{ backgroundColor: "white" }} className="text-black text-center font-bold py-4 px-4 rounded-lg">
-           This survey aims to understand customer satisfaction with our products or services.
-            </Text>
-           </View>
-          </SafeAreaView>
+        {/*People information */}
+       <View className="mt-6">
+            <Text className="text-black text-center font-bold bg-[#D9D9D9] py-2 rounded-lg">
+                  Enter Your Information</Text>
+          </View>
+                  
+        {/*Information box*/}
+        <View className="flex-1 mt-6 p-4  bg- rounded-lg bg-[#D9D9D9] h-auto">
+           <TextInput placeholder='Enter Your Name'
+            className="bg-[white] text-center py-2 rounded-lg"/>
 
-        {/* Render Questions Dynamically */}
+           <TextInput placeholder='Enter Age'
+            className="bg-[white] text-center py-2 mt-4 rounded-lg"/>
+
+           <TextInput placeholder='Enter NID/Passport Number'
+            className="bg-[white] text-center py-2 mt-4 rounded-lg"/>
+
+           <TextInput placeholder='Enter Mobile Number'
+            className="bg-[white] text-center py-2 mt-4 rounded-lg"/>
+
+           <TextInput placeholder='Enter Division'
+            className="bg-[white] text-center py-2 mt-4 rounded-lg"/>
+
+            <TextInput placeholder='Enter District'
+            className="bg-[white] text-center py-2 mt-4 rounded-lg"/>
+
+            <TextInput placeholder='Enter Thana'
+            className="bg-[white] text-center py-2 mt-4 rounded-lg"/>
+        </View>
+
+
+        {/* Survey Name and Details Input */}
+        <View className="mt-6 p-4  bg-[#A1E4F8] rounded-lg h-auto">
+          <Text
+            className="bg-[#7DA5C1] text-white text-center py-2 rounded-lg">
+              Customer Satisfaction Survey</Text>
+
+              <Text
+            className="bg-[#7DA5C1] text-white text-center py-2 mt-4 rounded-lg">
+              This survey aims to understand customer satisfaction with our products or services.</Text>
+
+        </View>
+
+        {/* Question Section */}
+
+        {/* Q1 */}
+        <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+              1. How satisfied are you with our products?</Text>
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          
+          {/* Options */}
         
-         <SafeAreaView style={{ backgroundColor: "#30DCB7" }} className="min-h-[160px] mt-6 rounded-lg flex justify-center items-center px-4 pb-6">
-          {questions.map((question) => (
-            <View key={question.id} className="w-full max-w-lg">
-              {/* Question Text */}
-              <View className="mt-6 bg-white p-4 rounded-lg items-center">
-                <Text className="text-black text-xl font-bold text-center">{question.text}</Text>
-              </View>
-        
-              {/* Options */}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3 items-center w-full">
-                {question.options.map((option, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => handleSelect(question.id, option)}
-                    className={`w-4/5 p-3 rounded-lg mt-2 ${index === question.options.length - 1 ? "mb-6" : "mb-2"} text-center ${
-                      selectedOptions[question.id] === option ? "bg-[#30DCB7]" : "bg-gray-200"
-                    }`}
-                  >
-                    <Text className={`text-black text-center ${selectedOptions[question.id] === option ? "font-bold" : ""}`}>
-                      {selectedOptions[question.id] === option ? "✓ " : ""}{option}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          ))}
-        </SafeAreaView>
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption(index)}
+           >
+           <Ionicons 
+           name={selectedOption === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+        </View>
 
-        {/* Required Toggle */}
-        <SafeAreaView className="bg-white mt-4 mb-4 rounded-lg">
-                  <View className="mt-1 flex-row justify-between items-center">
-                    <MaterialIcons name="content-copy" size={24} color="black" />
-                    <View className="flex-row items-center space-x-2">
-                      <Text className="text-pink-400 font-bold">Required</Text>
-                      <Switch value={isRequired} onValueChange={setIsRequired} trackColor={{ true: "#FF69B4", false: "#ccc" }} />
-                    </View>
-                    <TouchableOpacity>
-                      <Ionicons name="trash" size={24} color="green" />
-                    </TouchableOpacity>
-                  </View>
-                </SafeAreaView>
-              </ScrollView>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity> 
+        </View>
+        </View>
+
+        {/*q2*/}
+        <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+              2. How would you rate the overall customer service experience?</Text>
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          
+          {/* Options */}
+        
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Excellent", "Very Good", "Good", "Poor"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption2(index)}
+           >
+           <Ionicons 
+           name={selectedOption2 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity>
+        
+        </View>
+        </View>
+
+        {/*q3*/}
+        <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+              3. Do you think our product is a good value for the price?</Text>
+
+             {/*Option*/}
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Yes", "Somewhat", "Neutral", "Dissatisfied"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption3(index)}
+           >
+           <Ionicons 
+           name={selectedOption3 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity>
+        
+        </View>
+        </View>
+
+       {/*q4*/}
+       <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+             4. How satisfied are you with the delivery time or speed of service?</Text>
+
+             {/*Option*/}
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption4(index)}
+           >
+           <Ionicons 
+           name={selectedOption4 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity> 
+        </View>
+        </View>
+
+       {/*q5*/}
+       <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+             5. How easy was it to navigate our website or store to find the product/service you needed?</Text>
+
+             {/*Option*/}
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Very Easy", "Easy", "Neutral", "Difficult"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption5(index)}
+           >
+           <Ionicons 
+           name={selectedOption5 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity> 
+        </View>
+        </View>
+
+        {/*q6*/}
+        <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+            6. How likely are you to purchase from us again in the future?</Text>
+
+             {/*Option*/}
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Very Likely", "Likely", "Neutral", "Unlikely"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption6(index)}
+           >
+           <Ionicons 
+           name={selectedOption6 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity> 
+        </View>
+        </View>
+
+       {/*q7*/}
+       <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+            7. How likely are you to recommend our products to others?</Text>
+
+             {/*Option*/}
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Very Likely", "Likely", "Neutral", "Unlikely"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption7(index)}
+           >
+           <Ionicons 
+           name={selectedOption7 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity> 
+        </View>
+        </View>
+
+        {/*q8*/}
+       <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+            8. Did our service meet your expectations?</Text>
+
+             {/*Option*/}
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Exceeded Expectations","Met Expectations","Neutral","Did Not Meet Expectations"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption8(index)}
+           >
+           <Ionicons 
+           name={selectedOption8 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity> 
+        </View>
+        </View>
+
+        {/*q9*/}
+       <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+            9.  How satisfied are you with the variety of products we offer?</Text>
+
+             {/*Option*/}
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption9(index)}
+           >
+           <Ionicons 
+           name={selectedOption9 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity> 
+        </View>
+        </View>
+
+        {/*q10*/}
+        <View className="mt-6 bg-[#A1E4F8] p-4 rounded-lg h-auto mb-6">
+        <Text
+            className="bg-white text-black font-bold py-2 rounded-lg p-2">
+             10. What feature or service would you like us to add in the future?</Text>
+
+             {/*Option*/}
+              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
+          {[0, 1, 2, 3].map((index) => {
+           const optionLabels = ["More product variety","Faster delivery options","Better customer support","More discounts and promotions"];
+          return (
+           <TouchableOpacity 
+            key={index} 
+           className="flex-row items-center"
+            onPress={() => setSelectedOption10(index)}
+           >
+           <Ionicons 
+           name={selectedOption10 === index ? "radio-button-on" : "radio-button-off"} 
+           size={24} 
+           color="black" 
+          />
+          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
+        </TouchableOpacity>
+        );
+          })}
+
+        </View>
+        {/*required */}
+        <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
+          <MaterialIcons name="content-copy" size={24} color="black" />
+          <View className="flex-row items-center space-x-2">
+            <Text className="text-pink-400 font-bold">Required</Text>
+            <Switch
+              value={isRequired}
+              onValueChange={setIsRequired}
+              trackColor={{ true: '#FF69B4', false: '#ccc' }}
+            />
+          </View>
+          <TouchableOpacity>
+            <Ionicons name="trash" size={24} color="green" />
+          </TouchableOpacity> 
+        </View>
+        </View>
+
+        
+      </ScrollView>
 
       {/* Bottom Navigation */}
-      <View style={{ backgroundColor: "#30DCB7" }} className="flex-row justify-between items-center p-4">
+      <View className="flex-row justify-between items-center bg-[#7DA5C1] p-4">
         <TouchableOpacity>
           <Text className="text-black text-lg font-bold">TT</Text>
         </TouchableOpacity>
         <TouchableOpacity>
           <FontAwesome name="plus-circle" size={30} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <FontAwesome name="home" size={30} color="black" />
         </TouchableOpacity>
         <TouchableOpacity>
@@ -155,6 +586,8 @@ const Template1 = () => {
           <FontAwesome name="bars" size={30} color="black" />
         </TouchableOpacity>
       </View>
+
+      
     </SafeAreaView>
   );
 };
