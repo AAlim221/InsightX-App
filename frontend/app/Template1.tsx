@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Switch, ScrollView } from 'rea
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useRouter } from "expo-router";
 
 // Define your stack params
 type RootStackParamList = {
@@ -15,6 +16,16 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Template1'>;
 
 const Template1: React.FC<Props> = ({ navigation }) => {
   const [isRequired, setIsRequired] = useState(false);
+  const [isRequired2, setIsRequired2] = useState(false);
+    const [isRequired3, setIsRequired3] = useState(false);
+    const [isRequired4, setIsRequired4] = useState(false);
+    const [isRequired5, setIsRequired5] = useState(false);
+    const [isRequired6, setIsRequired6] = useState(false);
+    const [isRequired7, setIsRequired7] = useState(false);
+    const [isRequired8, setIsRequired8] = useState(false);
+    const [isRequired9, setIsRequired9] = useState(false);
+    const [isRequired10, setIsRequired10] = useState(false);
+
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [selectedOption2, setSelectedOption2] = useState<number | null>(null);
   const [selectedOption3, setSelectedOption3] = useState<number | null>(null);
@@ -25,7 +36,7 @@ const Template1: React.FC<Props> = ({ navigation }) => {
   const [selectedOption8, setSelectedOption8] = useState<number | null>(null);
   const [selectedOption9, setSelectedOption9] = useState<number | null>(null);
   const [selectedOption10, setSelectedOption10] = useState<number | null>(null);
-  
+  const router = useRouter();
 
   return (
     <SafeAreaView className="flex-1 bg-black">
@@ -33,7 +44,7 @@ const Template1: React.FC<Props> = ({ navigation }) => {
       <View className="px-4 pt-6 flex-row justify-between items-center bg-[#A1E4F8] p-2">
       
         {/* Back Button */}
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => router.push('/home')}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         {/* Undo/Redo and Theme Icons */}
@@ -199,8 +210,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired2}
+              onValueChange={setIsRequired2}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
@@ -245,8 +256,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired3}
+              onValueChange={setIsRequired3}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
@@ -290,8 +301,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired4}
+              onValueChange={setIsRequired4}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
@@ -334,8 +345,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired5}
+              onValueChange={setIsRequired5}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
@@ -378,8 +389,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired6}
+              onValueChange={setIsRequired6}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
@@ -422,8 +433,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired7}
+              onValueChange={setIsRequired7}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
@@ -466,8 +477,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired8}
+              onValueChange={setIsRequired8}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
@@ -510,8 +521,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired9}
+              onValueChange={setIsRequired9}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
@@ -554,8 +565,8 @@ const Template1: React.FC<Props> = ({ navigation }) => {
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
-              value={isRequired}
-              onValueChange={setIsRequired}
+              value={isRequired10}
+              onValueChange={setIsRequired10}
               trackColor={{ true: '#FF69B4', false: '#ccc' }}
             />
           </View>
