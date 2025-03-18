@@ -44,7 +44,7 @@ const Template1: React.FC<Props> = ({ navigation }) => {
       <View className="px-4 pt-6 flex-row justify-between items-center bg-[#A1E4F8] p-2">
       
         {/* Back Button */}
-        <TouchableOpacity onPress={() => router.push('/home')}>
+        <TouchableOpacity onPress={() => router.push('/HomeScreen')}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         {/* Undo/Redo and Theme Icons */}

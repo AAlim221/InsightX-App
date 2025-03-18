@@ -5,9 +5,14 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ProfileCom from './ProfileCom'; // Ensure ProfileCom is correctly imported
 
-const HeaderOfTemplate = () => {
-  const navigation = useNavigation(); // Hook to use navigation
 
+  type HeaderOfTemplateProps = {
+    handleSubmit: () => Promise<void>;
+  };
+  
+  const HeaderOfTemplate: React.FC<HeaderOfTemplateProps> = ({ handleSubmit }) => {
+    const navigation = useNavigation(); 
+   
   return (
     <View className="px-4 pt-6 flex-row justify-between items-center gap-4 mb-4">
       {/* Back Button */}
@@ -29,9 +34,9 @@ const HeaderOfTemplate = () => {
       </View>
 
       {/* Publish Button */}
-      <TouchableOpacity
+      <TouchableOpacity 
         className="bg-yellow-400 px-4 py-2 rounded-lg ml-16"
-        onPress={() => alert("Published!")}
+        onPress={() => handleSubmit()}    // Use the function from props
       >
         <Text className="text-black font-bold">Publish</Text>
       </TouchableOpacity>
