@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, ScrollView, Pressable, ImageBackground } 
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-
 // Define the stack param list
 type RootStackParamList = {
   HomeScreen: undefined;
@@ -11,9 +10,13 @@ type RootStackParamList = {
   Template3: undefined;
   Template4: undefined;
   Template5: undefined;
+  Template6: undefined;
+  Surveyor:undefined;
+  InviteAddScreen:undefined;
+
 };
 
-type TemplatesSectionComNavigationProp = StackNavigationProp<RootStackParamList, 'Template5'>;
+type TemplatesSectionComNavigationProp = StackNavigationProp<RootStackParamList, 'Surveyor'>;
 
 const TemplatesSectionCom = () => {
   // Get the navigation object from useNavigation inside the component
@@ -25,7 +28,7 @@ const TemplatesSectionCom = () => {
 
   // Define the handleViewAllPress function to navigate to Template5 screen
   const handleViewAllPress = () => {
-    navigation.navigate('Template5');
+    navigation.navigate('InviteAddScreen');
   };
 
   // Template data with names and background images
@@ -35,6 +38,7 @@ const TemplatesSectionCom = () => {
     { name: 'Template 3', screen: 'Template3', image: require('../assets/images/Temp3.png') },
     { name: 'Template 4', screen: 'Template4', image: require('../assets/images/Temp4.png') },
     { name: 'Template 5', screen: 'Template5', image: require('../assets/images/Temp5.png') },
+    { name: 'Template 6', screen: 'Surveyor', image: require('../assets/images/Temp5.png') },
   ];
 
   return (

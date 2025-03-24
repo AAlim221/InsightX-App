@@ -20,6 +20,8 @@ export default function RootLayout() {
         <Stack.Screen name="Template3" options={{ headerShown: false }} />
         <Stack.Screen name="Template4" options={{ headerShown: false }} />
         <Stack.Screen name="Template5" options={{ headerShown: false }} />
+        <Stack.Screen name="Surveyor" options={{ headerShown: false }} />
+        <Stack.Screen name="InviteAddScreen" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

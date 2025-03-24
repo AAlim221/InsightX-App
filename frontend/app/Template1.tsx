@@ -4,6 +4,7 @@ import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useRouter } from "expo-router";
+import DropDownCom from "@/components/DropDownOption";
 
 // Define your stack params
 type RootStackParamList = {
@@ -39,12 +40,12 @@ const Template1: React.FC<Props> = ({ navigation }) => {
   const router = useRouter();
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
+    <SafeAreaView className="flex-1 bg-[#A1E4F8]">
       {/* Header Section */}
       <View className="px-4 pt-6 flex-row justify-between items-center bg-[#A1E4F8] p-2">
       
         {/* Back Button */}
-        <TouchableOpacity onPress={() => router.push('/home')}>
+        <TouchableOpacity onPress={() => router.push('/HomeScreen')}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         {/* Undo/Redo and Theme Icons */}
@@ -135,32 +136,15 @@ const Template1: React.FC<Props> = ({ navigation }) => {
         <Text
             className="bg-white text-black font-bold py-2 rounded-lg p-2">
               1. How satisfied are you with our products?</Text>
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          
           {/* Options */}
-        
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption(index)}
-           >
-           <Ionicons 
-           name={selectedOption === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
-        </View>
+        <DropDownCom/>
+       
 
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+          <TouchableOpacity>
+                    <MaterialIcons name="content-copy" size={24} color="black"/>
+          </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -180,33 +164,15 @@ const Template1: React.FC<Props> = ({ navigation }) => {
         <Text
             className="bg-white text-black font-bold py-2 rounded-lg p-2">
               2. How would you rate the overall customer service experience?</Text>
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          
+              
           {/* Options */}
-        
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Excellent", "Very Good", "Good", "Poor"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption2(index)}
-           >
-           <Ionicons 
-           name={selectedOption2 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
+          <DropDownCom/>
 
-
-        </View>
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+           <TouchableOpacity>
+                     <MaterialIcons name="content-copy" size={24} color="black"/>
+           </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -229,30 +195,13 @@ const Template1: React.FC<Props> = ({ navigation }) => {
               3. Do you think our product is a good value for the price?</Text>
 
              {/*Option*/}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Yes", "Somewhat", "Neutral", "Dissatisfied"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption3(index)}
-           >
-           <Ionicons 
-           name={selectedOption3 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
+             <DropDownCom/>
 
-
-        </View>
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+           <TouchableOpacity>
+                     <MaterialIcons name="content-copy" size={24} color="black"/>
+           </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -275,29 +224,13 @@ const Template1: React.FC<Props> = ({ navigation }) => {
              4. How satisfied are you with the delivery time or speed of service?</Text>
 
              {/*Option*/}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption4(index)}
-           >
-           <Ionicons 
-           name={selectedOption4 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
+             <DropDownCom/>
 
-        </View>
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+           <TouchableOpacity>
+                     <MaterialIcons name="content-copy" size={24} color="black"/>
+           </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -319,29 +252,13 @@ const Template1: React.FC<Props> = ({ navigation }) => {
              5. How easy was it to navigate our website or store to find the product/service you needed?</Text>
 
              {/*Option*/}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Very Easy", "Easy", "Neutral", "Difficult"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption5(index)}
-           >
-           <Ionicons 
-           name={selectedOption5 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
+             <DropDownCom/>
 
-        </View>
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+          <TouchableOpacity>
+                    <MaterialIcons name="content-copy" size={24} color="black"/>
+          </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -363,29 +280,13 @@ const Template1: React.FC<Props> = ({ navigation }) => {
             6. How likely are you to purchase from us again in the future?</Text>
 
              {/*Option*/}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Very Likely", "Likely", "Neutral", "Unlikely"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption6(index)}
-           >
-           <Ionicons 
-           name={selectedOption6 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
+             <DropDownCom/>
 
-        </View>
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+           <TouchableOpacity>
+                     <MaterialIcons name="content-copy" size={24} color="black"/>
+           </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -407,29 +308,13 @@ const Template1: React.FC<Props> = ({ navigation }) => {
             7. How likely are you to recommend our products to others?</Text>
 
              {/*Option*/}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Very Likely", "Likely", "Neutral", "Unlikely"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption7(index)}
-           >
-           <Ionicons 
-           name={selectedOption7 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
+             <DropDownCom/>
 
-        </View>
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+          <TouchableOpacity>
+                    <MaterialIcons name="content-copy" size={24} color="black"/>
+          </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -451,29 +336,13 @@ const Template1: React.FC<Props> = ({ navigation }) => {
             8. Did our service meet your expectations?</Text>
 
              {/*Option*/}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Exceeded Expectations","Met Expectations","Neutral","Did Not Meet Expectations"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption8(index)}
-           >
-           <Ionicons 
-           name={selectedOption8 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
+             <DropDownCom/>
 
-        </View>
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+          <TouchableOpacity>
+                    <MaterialIcons name="content-copy" size={24} color="black"/>
+          </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -495,29 +364,13 @@ const Template1: React.FC<Props> = ({ navigation }) => {
             9.  How satisfied are you with the variety of products we offer?</Text>
 
              {/*Option*/}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["Very Satisfied", "Satisfied", "Neutral", "Dissatisfied"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption9(index)}
-           >
-           <Ionicons 
-           name={selectedOption9 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
+             <DropDownCom/>
 
-        </View>
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+          <TouchableOpacity>
+                    <MaterialIcons name="content-copy" size={24} color="black"/>
+          </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch
@@ -539,29 +392,13 @@ const Template1: React.FC<Props> = ({ navigation }) => {
              10. What feature or service would you like us to add in the future?</Text>
 
              {/*Option*/}
-              <View className="bg-white p-4 mt-4 rounded-lg space-y-3">
-          {[0, 1, 2, 3].map((index) => {
-           const optionLabels = ["More product variety","Faster delivery options","Better customer support","More discounts and promotions"];
-          return (
-           <TouchableOpacity 
-            key={index} 
-           className="flex-row items-center"
-            onPress={() => setSelectedOption10(index)}
-           >
-           <Ionicons 
-           name={selectedOption10 === index ? "radio-button-on" : "radio-button-off"} 
-           size={24} 
-           color="black" 
-          />
-          <Text className="ml-2 text-black">{optionLabels[index]}</Text>
-        </TouchableOpacity>
-        );
-          })}
-
-        </View>
+             <DropDownCom/>
+            
         {/*required */}
         <View className="mt-4 flex-row justify-between items-center bg-[white] p-2">
-          <MaterialIcons name="content-copy" size={24} color="black" />
+           <TouchableOpacity>
+                     <MaterialIcons name="content-copy" size={24} color="black"/>
+           </TouchableOpacity>
           <View className="flex-row items-center space-x-2">
             <Text className="text-pink-400 font-bold">Required</Text>
             <Switch

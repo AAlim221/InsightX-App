@@ -7,10 +7,9 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-  Image,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
+import SocialLogin from "./SocialLogin";
 
 export default function Login() {
   const router = useRouter();
@@ -32,7 +31,7 @@ export default function Login() {
 
       setLoading(false);
       const { data } = await axios.post(
-        "http://192.168.0.189:8082/api/v1/auth/login",
+        "http://10.46.25.110:8082/api/v1/auth/login",
         { email, password }
       );
 
@@ -100,32 +99,8 @@ export default function Login() {
         >
           <Text className="text-center text-black text-lg font-bold">Login</Text>
         </TouchableOpacity>
-
         {/* Social Login */}
-        <Text className="text-center text-white mb-2">Sign in with</Text>
-        <View className="flex-row justify-center mb-4 space-x-6">
-          <TouchableOpacity
-            className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-md"
-            onPress={() => router.push("/HomeScreen")}
-          >
-            <FontAwesome name="google" size={28} color="#DB4437" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-md"
-            onPress={() => router.push("/HomeScreen")}
-          >
-            <FontAwesome name="apple" size={28} color="black" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="bg-white w-14 h-14 rounded-full flex items-center justify-center shadow-md"
-            onPress={() => router.push("/HomeScreen")}
-          >
-            <FontAwesome name="facebook" size={28} color="#1877F2" />
-          </TouchableOpacity>
-        </View>
-
+        <SocialLogin/>
         {/* Signup Link */}
         <View className="mt-4">
           <Text className="text-white text-center text-base">

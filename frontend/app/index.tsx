@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { SafeAreaView,} from "react-native";
 import { Link, useRouter } from "expo-router";
-import { FontAwesome } from "@expo/vector-icons";
 import HeroImage from "@/components/HeroImage";
 import LoginForm from "@/components/LoginForm";
 export default function Login() {

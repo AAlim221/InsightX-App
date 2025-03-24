@@ -22,9 +22,11 @@ app.use(morgan('dev'))
 
 //ROUTES
 app.use('/api/v1/auth',require("./routes/userRoutes"));
+app.use('/api/v1/auth',require("./routes/formRoutes"));
+app.use("/api/v1/auth", require("./routes/responseRoutes")); 
 
 //PORT
-const PORT = process.env.PORT || 8081
+const PORT = process.env.PORT || 8082
 
 //listen
 app.listen(PORT,() => {
