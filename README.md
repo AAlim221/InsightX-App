@@ -1,2 +1,0 @@
-# InsightX-App
-InsightX-App
