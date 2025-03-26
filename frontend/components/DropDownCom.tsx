@@ -60,6 +60,12 @@ const DropdownCom: React.FC<DropdownComProps> = ({ onTypeChange, index, type }) 
     onTypeChange(index, option);
   };
   
+<<<<<<< HEAD
+=======
+
+  
+
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
   return (
     <View className="bg-white p-4 mt-4 rounded-lg space-y-3 shadow-md">
       {/* Dropdown Trigger */}
@@ -88,7 +94,14 @@ const DropdownCom: React.FC<DropdownComProps> = ({ onTypeChange, index, type }) 
           />
         </View>
       )}
+<<<<<<< HEAD
     </View>
+=======
+
+     
+     
+    </ScrollView>
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
   );
 };
 

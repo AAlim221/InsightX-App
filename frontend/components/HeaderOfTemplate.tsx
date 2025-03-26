@@ -7,7 +7,10 @@ import ProfileCom from './ProfileCom'; // Ensure ProfileCom is correctly importe
 import Surveyor from '@/app/Surveyor';
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
   type HeaderOfTemplateProps = {
     handleSubmit: () => Promise<void>;
   };

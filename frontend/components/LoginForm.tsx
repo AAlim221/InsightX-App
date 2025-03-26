@@ -31,7 +31,11 @@ export default function Login() {
 
       setLoading(false);
       const { data } = await axios.post(
+<<<<<<< HEAD
         "http://10.46.25.110:8082/api/v1/auth/login",
+=======
+        "http://192.168.0.197:8082/api/v1/auth/login",
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
         { email, password }
       );
 

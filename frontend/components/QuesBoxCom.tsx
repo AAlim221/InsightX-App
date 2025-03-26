@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Switch } from "react-native";
+<<<<<<< HEAD
 import { Ionicons, } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import DropDownCom from "./DropDownCom"; 
+=======
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import DropDownCom from "./DropDownCom"; // Ensure correct path
+
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
 interface QuesBoxProps {
   index: number;
   question: string;
@@ -14,8 +21,11 @@ interface QuesBoxProps {
   onTypeChange: (index: number, type: string) => void;
   onOptionsChange: (index: number, options: string[]) => void;
   onGridChange?: (index: number, rows: string[], columns: string[]) => void;
+<<<<<<< HEAD
   onCopyQuestion: (index: number) => void;
   onDeleteQuestion: (index: number) => void;
+=======
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
 }
 
 const QuesBoxCom: React.FC<QuesBoxProps> = ({
@@ -29,8 +39,11 @@ const QuesBoxCom: React.FC<QuesBoxProps> = ({
   onTypeChange,
   onOptionsChange,
   onGridChange,
+<<<<<<< HEAD
   onCopyQuestion,
   onDeleteQuestion,
+=======
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
 }) => {
   const [isRequired, setIsRequired] = useState(false);
   const [mcqOptions, setMcqOptions] = useState(options);
@@ -98,11 +111,17 @@ const QuesBoxCom: React.FC<QuesBoxProps> = ({
 
   /** Add a new Column */
   const handleAddColumn = () => handleGridUpdate(gridRows, [...gridColumns, `Col ${gridColumns.length + 1}`]);
+<<<<<<< HEAD
   
 
   return (
     <SafeAreaView>
       <View className="mt-6 bg-white p-4 rounded-lg shadow-md">
+=======
+
+  return (
+    <SafeAreaView>
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
       <View className="mt-6 bg-white p-4 rounded-lg shadow-md">
         <TextInput
           placeholder="Write Question here"
@@ -167,6 +186,7 @@ const QuesBoxCom: React.FC<QuesBoxProps> = ({
           </TouchableOpacity>
         </View>
       )}
+<<<<<<< HEAD
       {/* Copy and Delete Icons and required */}
       <View className="mt-8 flex-row justify-between items-center">
           {/* Copy Icon */}
@@ -187,6 +207,18 @@ const QuesBoxCom: React.FC<QuesBoxProps> = ({
           <TouchableOpacity onPress={() => onDeleteQuestion(index)}>
             <Ionicons name="trash-outline" size={24} color="black" />
           </TouchableOpacity>
+=======
+
+      <View className="mt-4 flex-row justify-between items-center">
+        <MaterialIcons name="content-copy" size={24} color="black" />
+        <View className="flex-row items-center space-x-2">
+          <Text className="text-slate-900 font-bold">Required</Text>
+          <Switch
+            value={isRequired}
+            onValueChange={setIsRequired}
+            trackColor={{ true: "#00C6C6", false: "#ccc" }}
+          />
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
         </View>
       </View>
     </SafeAreaView>

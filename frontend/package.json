@@ -16,11 +16,18 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+<<<<<<< HEAD
     "@react-native-community/slider": "^4.5.6",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/drawer": "^7.1.2",
     "@react-navigation/native": "^7.0.15",
     "@react-navigation/native-stack": "^7.2.1",
+=======
+    "@react-native-picker/picker": "^2.11.0",
+    "@react-navigation/bottom-tabs": "^7.2.0",
+    "@react-navigation/drawer": "^7.1.1",
+    "@react-navigation/native": "^7.0.15",
+>>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
     "@react-navigation/stack": "^7.1.2",
     "axios": "^1.8.1",
     "expo": "~52.0.37",
