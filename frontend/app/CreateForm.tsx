@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, ScrollView, Alert, Button, FlatList, TouchableOpacity} from "react-native";
-import { router } from "expo-router";
+import { 
+  View, Text, TextInput, ScrollView, Alert, Button, FlatList
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { router } from "expo-router";
 import QuesBoxCom from "@/components/QuesBoxCom";
 import PeopleInfoCom from "@/components/PeopleInfoCom";
 import HeaderOfTemplate from "@/components/HeaderOfTemplate";
 import BottomNavCom from "@/components/BottomNavCom";
 import { RootStackParamList } from "./Navigation";
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 // Define Question type
 type Question = {
   question: string;
@@ -17,12 +20,12 @@ type Question = {
   maxValue?: number;
   rows?: string[]; 
   columns?: string[];
-  answer?: string[][]; 
+  answer?: string[][];
 };
 
 // Define Props type
 type Props = NativeStackScreenProps<RootStackParamList, "CreateForm">;
-// create form props
+
 const CreateForm: React.FC<Props> = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const [peopleDetails, setPeopleDetails] = useState({
@@ -34,17 +37,16 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
     district: "",
     thana: "",
   });
-
   const [surveyName, setSurveyName] = useState("");
   const [surveyDetails, setSurveyDetails] = useState("");
   const [questions, setQuestions] = useState<Question[]>([
     { question: "", type: "", options: [] },
   ]);
-// people info handle
+
   const handlePeopleInfoChange = (updatedInfo: { [key: string]: string }) => {
     setPeopleDetails((prev) => ({ ...prev, ...updatedInfo }));
   };
-//update question handle
+
   const updateQuestion = (index: number, key: keyof Question, value: any) => {
     setQuestions((prevQuestions) =>
       prevQuestions.map((q, i) => {
@@ -63,22 +65,19 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
       })
     );
   };
-// add question handle
+
   const addQuestion = () => {
-    setQuestions([
-      ...questions,
-      { question: "", type: "", options: [], rows: [], columns: [] },
-    ]);
+    setQuestions([...questions, { question: "", type: "", options: [], rows: [], columns: [] }]);
   };
-  // copy quetion handle
+
   const copyQuestion = (index: number) => {
     setQuestions([...questions, { ...questions[index] }]);
   };
-// delete question handle
+
   const deleteQuestion = (index: number) => {
     setQuestions(questions.filter((_, i) => i !== index));
   };
-// Grid handle
+
   const generateGridOptions = (numRows: number, numColumns: number): string[] => {
     const newOptions = [];
     for (let i = 0; i < numRows * numColumns; i++) {
@@ -86,12 +85,8 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
     }
     return newOptions;
   };
-// publish handle
-  const handleSubmit = async () => {
-    console.log("Title:", title);
-    console.log("Questions:", questions);
 
-    // Validate inputs
+  const handleSubmit = async () => {
     const invalidQuestion = questions.some(q =>
       !q.question.trim() ||
       !q.type ||
@@ -103,7 +98,7 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
       Alert.alert("Error", "Please ensure all required fields are filled.");
       return;
     }
-// clean option handle
+
     const cleanedQuestions = questions.map((q) => ({
       ...q,
       options: ["multiple-choice", "checkboxes"].includes(q.type) ? q.options ?? [] : [],
@@ -112,17 +107,22 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
       minValue: ["linear-scale", "rating"].includes(q.type) ? q.minValue : undefined,
       maxValue: ["linear-scale", "rating"].includes(q.type) ? q.maxValue : undefined,
     }));
-//form data handle all info
-    const formData = { title, peopleDetails: {}, surveyName, surveyDetails, questions: cleanedQuestions };
-    console.log("Form Data Sent:", JSON.stringify(formData, null, 2)); // Debugging log
-//Api connection
+
+    const formData = {
+      title,
+      peopleDetails,
+      surveyName,
+      surveyDetails,
+      questions: cleanedQuestions,
+    };
+
     try {
       const response = await fetch("http:///10.46.25.110:8082/api/v1/auth/createForm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-// form publisn and navigate next destination
+
       const responseData = await response.json();
       if (response.ok) {
         Alert.alert("Success", "Form Published!", [{ text: "OK", onPress: () => router.push("/Surveyor") }]);
@@ -138,7 +138,6 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView className="flex-1 bg-purple-500">
       <HeaderOfTemplate handleSubmit={handleSubmit} />
       <ScrollView className="px-4">
-                    {/*Survey Tittle part */}
         <View className="mt-2 mb-4  bg-white p-4 rounded-lg shadow-md">
           <TextInput
             placeholder="Survey title"
@@ -147,9 +146,7 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
             onChangeText={setTitle}
           />
         </View>
-         {/* People info part*/}
         <PeopleInfoCom onPeopleInfoChange={handlePeopleInfoChange} />
-         {/*Tittle Bar of survey */}
         <View className="mt-4 bg-white p-4 rounded-lg shadow-md gap-4">
           <TextInput
             placeholder="Survey Name"
@@ -164,7 +161,6 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
             onChangeText={setSurveyDetails}
           />
         </View>
-         {/*Dynamic flatlist */}
 
         <FlatList
           data={questions}
@@ -185,15 +181,16 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
                 onCopyQuestion={copyQuestion}
                 onDeleteQuestion={deleteQuestion}
               />
+
+              
             </View>
           )}
         />
- {/*Add buttom  part */}
+
         <View className="mt-4">
           <Button title="Add Question" onPress={addQuestion} />
         </View>
       </ScrollView>
-       {/* Bottom nav part */}
       <BottomNavCom />
     </SafeAreaView>
   );

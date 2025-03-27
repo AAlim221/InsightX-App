@@ -35,11 +35,7 @@ export default function Signup() {
       }
 
       const { data } = await axios.post(
-<<<<<<< HEAD
         "http://10.46.25.110:8082/api/v1/auth/register",
-=======
-        "http://192.168.0.197:8082/api/v1/auth/register",
->>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
         { userName,email, contactNo, DOB, password, confirmPassword,role }
       );
 
