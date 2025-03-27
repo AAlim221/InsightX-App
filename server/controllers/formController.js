@@ -4,21 +4,9 @@ const formsModel = require('../models/formsModel');
 // Create a new form
 const createForm = async (req, res) => {
   try {
-    const { title, questions } = req.body;
-<<<<<<< HEAD
-    const validTypes = [
-      "short-answer",
-      "paragraph",
-      "multiple-choice",
-      "checkboxes",
-      "linear-scale",
-      "rating",
-      "multiple-choice-grid",
-      "checkbox-grid"
-    ];
-=======
->>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
+    const { title, questions,peopleDetails } = req.body;
 
+    console.log("Received Data:", req.body); // Debugging log
     // Validate the required fields
     if (!title || !questions || !Array.isArray(questions)) {
       return res.status(400).json({ error: "Missing title or questions or questions is not an array" });
@@ -28,14 +16,6 @@ const createForm = async (req, res) => {
     for (const question of questions) {
       const { type, options, minValue, maxValue, rows, columns } = question;
 
-<<<<<<< HEAD
-      // Validate type for each question
-      if (!validTypes.includes(type)) {
-        return res.status(400).json({ error: `Invalid question type: ${type}` });
-      }
-
-=======
->>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
       // If type is "multiple-choice" or "checkboxes", validate the options
       if ((type === "multiple-choice" || type === "checkboxes" || type === "multiple-choice-grid" || type === "checkbox-grid") && (!options || options.length === 0)) {
         return res.status(400).json({ error: `Options must be provided for question type: ${type}` });
@@ -53,7 +33,7 @@ const createForm = async (req, res) => {
     }
 
     // Create the new form object
-    const newForm = new formsModel({ title, questions });
+    const newForm = new formsModel({ title, peopleDetails: peopleDetails || {}, questions });
 
     // Save the form to the database
     await newForm.save();

@@ -17,17 +17,25 @@ const QuestionSchema = new mongoose.Schema({
     ],
     required: true
   },
-  options: [String], // Options for multiple-choice, checkboxes, multiple-choice grid, checkbox grid
-  minValue: { type: Number }, // For linear scale and rating (optional)
-  maxValue: { type: Number }, // For linear scale and rating (optional)
-  rows: [String], // For multiple-choice grid and checkbox grid (optional)
-  columns: [String] // For multiple-choice grid and checkbox grid (optional)
+  options: [{ type: String }], // Optional unless required by the question type
+  minValue: { type: Number }, // For linear scale and rating
+  maxValue: { type: Number }, // For linear scale and rating
+  rows: [{ type: String }], // For multiple-choice grid and checkbox grid
+  columns: [{ type: String }] // For multiple-choice grid and checkbox grid
 });
 
 // Define the schema for Form
 const FormSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
+    peopleDetails: {
+      name: { type: String,default:"" },
+      age: { type: Number,default:null },
+      nid: { type: String,default: "" },
+      mobile: { type: String,default: "" },
+      division: { type: String ,default: ""},
+      district: { type: String ,default: ""}
+    },
     questions: [QuestionSchema]
   },
   { timestamps: true }

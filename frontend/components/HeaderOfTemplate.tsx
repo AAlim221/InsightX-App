@@ -4,13 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ProfileCom from './ProfileCom'; // Ensure ProfileCom is correctly imported
-import Surveyor from '@/app/Surveyor';
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0b24abe58d1f29a5ab0db2a524875b7e330873da
   type HeaderOfTemplateProps = {
     handleSubmit: () => Promise<void>;
   };
