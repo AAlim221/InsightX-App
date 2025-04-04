@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Modal } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface PeopleInfoComProps {
   onPeopleInfoChange: (updatedInfo: { [key: string]: string }) => void;
@@ -43,7 +42,7 @@ const PeopleInfoCom: React.FC<PeopleInfoComProps> = ({ onPeopleInfoChange }) => 
   };
  
   return (
-    <SafeAreaView className="w-full flex-1 justify-center items-center bg-purple-500 p-4">
+    <View className="flex-1 justify-center items-center bg-purple-500 p-4">
       {/* Modal Trigger Button */}
       <TouchableOpacity 
         className="w-full bg-white p-4 mb-6 rounded-md" 
@@ -114,7 +113,7 @@ const PeopleInfoCom: React.FC<PeopleInfoComProps> = ({ onPeopleInfoChange }) => 
           ))
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

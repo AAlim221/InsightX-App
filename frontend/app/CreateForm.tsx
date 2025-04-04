@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { 
-  View, Text, TextInput, ScrollView, Alert, Button, FlatList
+import {
+  View,
+  TextInput,
+  ScrollView,
+  Alert,
+  Button,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -18,7 +23,7 @@ type Question = {
   options?: string[];
   minValue?: number;
   maxValue?: number;
-  rows?: string[]; 
+  rows?: string[];
   columns?: string[];
   answer?: string[][];
 };
@@ -42,97 +47,163 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
   const [questions, setQuestions] = useState<Question[]>([
     { question: "", type: "", options: [] },
   ]);
-
+// people information
   const handlePeopleInfoChange = (updatedInfo: { [key: string]: string }) => {
     setPeopleDetails((prev) => ({ ...prev, ...updatedInfo }));
   };
-
-  const updateQuestion = (index: number, key: keyof Question, value: any) => {
+  //update grid
+  const updateGrid = (index: number, rows: string[], columns: string[]) => {
     setQuestions((prevQuestions) =>
-      prevQuestions.map((q, i) => {
-        if (i === index) {
-          const updatedQuestion = { ...q, [key]: Array.isArray(value) ? [...value] : value };
-
-          // Ensure that rows and columns persist when updating grid-related types
-          if (key === "type" && (value === "multiple-choice-grid" || value === "checkbox-grid")) {
-            updatedQuestion.rows = q.rows && q.rows.length > 0 ? [...q.rows] : ["Row 1"];
-            updatedQuestion.columns = q.columns && q.columns.length > 0 ? [...q.columns] : ["Column 1"];
-          }
-
-          return updatedQuestion;
-        }
-        return q;
-      })
+      prevQuestions.map((q, i) => 
+        i === index ? { ...q, rows: [...rows], columns: [...columns] } : q
+      )
     );
   };
+// Update question handle
+const updateQuestion = (index: number, key: keyof Question, value: any) => {
+  setQuestions((prevQuestions) =>
+    prevQuestions.map((q, i) => {
+      if (i === index) {
+        const updatedQuestion = { ...q, [key]: Array.isArray(value) ? [...value] : value };
 
+        // Ensure that rows and columns persist when updating grid-related types
+        if (key === "type" && (value === "multiple-choice-grid" || value === "checkbox-grid")) {
+          updatedQuestion.rows = q.rows && q.rows.length > 0 ? [...q.rows] : ["Row 1"];
+          updatedQuestion.columns = q.columns && q.columns.length > 0 ? [...q.columns] : ["Column 1"];
+        }
+
+        return updatedQuestion;
+      }
+      return q;
+    })
+  );
+};
+// add question handle
   const addQuestion = () => {
-    setQuestions([...questions, { question: "", type: "", options: [], rows: [], columns: [] }]);
+    setQuestions([
+      ...questions,
+      { question: "", type: "", options: [], rows: [], columns: [] },
+    ]);
   };
-
+// Copy Question
   const copyQuestion = (index: number) => {
     setQuestions([...questions, { ...questions[index] }]);
   };
-
+// Delete Question
   const deleteQuestion = (index: number) => {
     setQuestions(questions.filter((_, i) => i !== index));
   };
-
-  const generateGridOptions = (numRows: number, numColumns: number): string[] => {
+//Option Genarate
+  const generateGridOptions = (
+    numRows: number,
+    numColumns: number
+  ): string[] => {
     const newOptions = [];
     for (let i = 0; i < numRows * numColumns; i++) {
       newOptions.push(`Option ${i + 1}`);
     }
     return newOptions;
   };
+// Handle Submit
+const handleSubmit = async () => {
+  console.log("Title:", title);
+  console.log("Questions:", questions);
 
-  const handleSubmit = async () => {
-    const invalidQuestion = questions.some(q =>
-      !q.question.trim() ||
-      !q.type ||
-      (["multiple-choice", "checkboxes"].includes(q.type) && (!q.options || q.options.length === 0)) ||
-      (["multiple-choice-grid", "checkbox-grid"].includes(q.type) && (!q.rows || !q.columns))
-    );
+  // Validate if title or any question is empty or has invalid type
+  if (!title.trim() || questions.some((q) => q.question.trim() === "" || !q.type)) {
+    Alert.alert("Error", "Please add a title and valid questions.");
+    return;
+  }
 
-    if (!title.trim() || invalidQuestion) {
-      Alert.alert("Error", "Please ensure all required fields are filled.");
-      return;
+  // Ensure options are provided only for multiple-choice or checkbox questions
+  if (questions.some((q) =>
+    (q.type === "multiple-choice" || q.type === "checkboxes") && (!q.options || q.options.length === 0)
+  )) {
+    Alert.alert("Error", "Options must be provided for multiple-choice and checkbox questions.");
+    return;
+  }
+  //For check-box-grid and multiple-choice-grid
+  if (questions.some((q) =>
+    (q.type === "multiple-choice-grid" || q.type === "checkbox-grid") &&
+    (!q.rows || q.rows.length === 0 || !q.columns || q.columns.length === 0)
+  )) {
+    Alert.alert("Error", "Rows and Columns must be provided for grid-type questions.");
+    return;
+  }
+  if (questions.some((q) => {
+  if ((q.type === "multiple-choice" || q.type === "checkboxes") && (!q.options || q.options.length === 0)) {
+      Alert.alert("Error", "Options must be provided for multiple-choice and checkbox questions.");
+      return true;
+  }
+  if ((q.type === "multiple-choice-grid" || q.type === "checkbox-grid") && 
+      (!q.rows || q.rows.length === 0 || !q.columns || q.columns.length === 0)) {
+      Alert.alert("Error", "Both rows and columns must be provided for grid-based questions.");
+      return true;
+  }
+  return false;
+})) {
+  return;
+}
+
+
+const cleanedQuestions = questions.map((q) => ({
+...q,
+
+// For multiple-choice or checkboxes, keep options; otherwise, set it as empty array
+options: ["multiple-choice", "checkboxes"].includes(q.type) ? q.options ?? [] :
+  // For grid types, generate options based on rows and columns
+  (["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? generateGridOptions(q.rows?.length ?? 0, q.columns?.length ?? 0) : []),
+
+// For grid types (multiple-choice-grid or checkbox-grid), keep rows and columns; otherwise, set them as empty arrays
+rows: ["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? q.rows ?? [] : [],
+columns: ["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? q.columns ?? [] : [],
+
+// For linear-scale or rating types, keep min and max values
+minValue: ["linear-scale", "rating"].includes(q.type) ? q.minValue : undefined,
+maxValue: ["linear-scale", "rating"].includes(q.type) ? q.maxValue : undefined,
+}));
+
+// Function to generate options for the grid based on rows and columns
+function generateGridOptions(numRows: number, numColumns: number): string[] {
+const newOptions = [];
+for (let i = 0; i < numRows * numColumns; i++) {
+  newOptions.push(`Option ${i + 1}`);
+}
+return newOptions;
+}
+
+  // Validate min and max values for "linear-scale" and "rating"
+  if (
+    cleanedQuestions.some(
+      (q) =>
+        ["linear-scale", "rating"].includes(q.type) &&
+        (q.minValue === undefined || q.maxValue === undefined)
+    )
+  ) {
+    Alert.alert("Error", "Please provide Min and Max values for Linear Scale & Rating questions.");
+    return;
+  }
+
+  const formData = { title, peopleDetails:{}, surveyName, surveyDetails, questions };
+  console.log("Form Data Sent:", JSON.stringify(formData, null, 2)); // Debugging log
+  try {
+    const response = await fetch("http://192.168.0.183:8082/api/v1/auth/createForm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+//form submit and navigate
+    const responseData = await response.json();
+    if (response.ok) {
+      Alert.alert("Success", "Form Published!", [{ text: "OK", onPress: () => router.push("/Surveyor") }]);
+    } else {
+      Alert.alert("Error", `Failed to save form: ${responseData.message || "Unknown error"}`);
     }
+  } catch (error) {
+    Alert.alert("Error", "An error occurred.");
+  }
+};
 
-    const cleanedQuestions = questions.map((q) => ({
-      ...q,
-      options: ["multiple-choice", "checkboxes"].includes(q.type) ? q.options ?? [] : [],
-      rows: ["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? q.rows ?? [] : [],
-      columns: ["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? q.columns ?? [] : [],
-      minValue: ["linear-scale", "rating"].includes(q.type) ? q.minValue : undefined,
-      maxValue: ["linear-scale", "rating"].includes(q.type) ? q.maxValue : undefined,
-    }));
-
-    const formData = {
-      title,
-      peopleDetails,
-      surveyName,
-      surveyDetails,
-      questions: cleanedQuestions,
-    };
-
-    try {
-      const response = await fetch("http:///10.46.25.110:8082/api/v1/auth/createForm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const responseData = await response.json();
-      if (response.ok) {
-        Alert.alert("Success", "Form Published!", [{ text: "OK", onPress: () => router.push("/Surveyor") }]);
-      } else {
-        Alert.alert("Error", `Failed to save form: ${responseData.message || "Unknown error"}`);
-      }
-    } catch (error) {
-      Alert.alert("Error", "An error occurred.");
-    }
-  };
 
   return (
     <SafeAreaView className="flex-1 bg-purple-500">
@@ -174,15 +245,24 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
                 options={item.options || []}
                 rows={item.rows || []}
                 columns={item.columns || []}
-                onQuestionChange={(i: number, value: string) => updateQuestion(i, "question", value)}
-                onTypeChange={(i: number, type: string) => updateQuestion(i, "type", type)}
-                onOptionsChange={(i: number, options: string[]) => updateQuestion(i, "options", options)}
-                onGridChange={(rows, columns) => updateQuestion(index, "rows", rows)}
+                onQuestionChange={(i: number, value: string) =>
+                  updateQuestion(i, "question", value)
+                }
+                onTypeChange={(i: number, type: string) =>
+                  updateQuestion(i, "type", type)
+                }
+                onOptionsChange={(i: number, options: string[]) =>
+                  updateQuestion(i, "options", options)
+                }
+                onGridChange={(i, rows, columns) => {
+                  updateQuestion(i, "rows", rows);
+                  updateQuestion(i, "columns", columns);
+                }}
+                
+                
                 onCopyQuestion={copyQuestion}
                 onDeleteQuestion={deleteQuestion}
               />
-
-              
             </View>
           )}
         />
