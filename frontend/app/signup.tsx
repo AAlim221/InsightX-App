@@ -13,6 +13,7 @@ import {
 import { useRouter } from "expo-router"; // Import useRouter
 import { Ionicons } from "@expo/vector-icons";
 
+
 export default function Signup() {
   const [userName, setuserName] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +41,9 @@ export default function Signup() {
       );
 
       alert(data && data.message);
-    } catch (error) {
+      router.push('/'); 
+    } 
+    catch (error) {
       if (axios.isAxiosError(error)) {
         Alert.alert("Error", error.response?.data?.message || "Something went wrong");
       } else {
