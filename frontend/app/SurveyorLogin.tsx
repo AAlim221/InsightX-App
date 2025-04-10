@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import {
   SafeAreaView,
   View,
@@ -9,17 +8,15 @@ import {
   Alert,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
-import SocialLogin from "./SocialLogin";
-
+import axios from "axios";
+import HeroImage from "@/components/HeroImage";
 export default function Login() {
   const router = useRouter();
 
-  // Define state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Handle login validation
   const handleLogin = async () => {
     try {
       setLoading(true);
@@ -29,38 +26,35 @@ export default function Login() {
         return;
       }
 
-      setLoading(false);
       const { data } = await axios.post(
         "http://192.168.0.183:8082/api/v1/auth/login",
         { email, password }
       );
 
       alert(data && data.message);
-      console.log("Login data==>", { email, password });
-      router.push("/HomeScreen"); // Navigate to Home
+      console.log("Login data ==>", { email, password });
+      router.push("/SurveyorDashbroad");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         Alert.alert("Error", "Invalid email or password");
       } else {
         Alert.alert("Error", "An unexpected error occurred");
       }
-      /* console.error(error); */
     } finally {
       setLoading(false);
     }
-    //console.log("Logging in with:", form);
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-black justify-between">
+    <SafeAreaView className="flex-1 bg-black justify-between pt-12 pb-4">
+      {/* Hero Image */}
+       <HeroImage/>
       {/* Login Form */}
-      <View className="bg-purple-700 p-6 rounded-3xl shadow-lg flex-1 justify-center mt-6 ml-4 ">
-        {/* Welcome Back Text */}
-        <View className="items-center mb-8">
-          <Text className="text-white text-4xl font-bold text-center">
-            Welcome back!
-          </Text>
-        </View>
+      <View className="bg-purple-700 p-6 rounded-3xl shadow-lg mx-4 flex-1 justify-center">
+        {/* Welcome Text */}
+        <Text className="text-white text-4xl font-bold text-center mb-8">
+          Welcome back!
+        </Text>
 
         {/* Email Input */}
         <TextInput
@@ -68,7 +62,7 @@ export default function Login() {
           placeholderTextColor="black"
           className="h-12 bg-white text-black px-4 rounded-full mb-4"
           value={email}
-          onChangeText={(setEmail)}
+          onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
         />
@@ -80,7 +74,7 @@ export default function Login() {
           secureTextEntry
           className="h-12 bg-white text-black px-4 rounded-full mb-4"
           value={password}
-          onChangeText={(setPassword)}
+          onChangeText={setPassword}
         />
 
         {/* Forgot Password */}
@@ -97,29 +91,11 @@ export default function Login() {
           className="bg-yellow-400 py-3 rounded-full mb-4"
           onPress={handleLogin}
         >
-          <Text className="text-center text-black text-lg font-bold">Login</Text>
-
+          <Text className="text-center text-black text-lg font-bold">
+            {loading ? "Logging in..." : "Login"}
+          </Text>
         </TouchableOpacity>
 
-        {/* Social Login */}
-        <SocialLogin/>
-        {/* Signup Link */}
-
-        <View className="mt-4">
-          <Text className="text-white text-center text-base">
-            Don’t have an account?{" "}
-            <Link href="/signup" className="text-yellow-300 font-semibold">
-              Sign up
-            </Link>
-          </Text>
-           {/* Surveyor Link*/}
-          <Text className="text-white text-center text-base">
-            Are You Surveyor?{" "}
-            <Link href="/SurveyorLogin" className="text-yellow-300 font-semibold">
-              Please go to login page
-            </Link>
-          </Text>
-        </View>
       </View>
     </SafeAreaView>
   );

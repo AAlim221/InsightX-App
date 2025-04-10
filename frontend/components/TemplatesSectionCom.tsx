@@ -11,12 +11,12 @@ type RootStackParamList = {
   Template4: undefined;
   Template5: undefined;
   Template6: undefined;
-  Surveyor:undefined;
+  Researcher:undefined;
   InviteAddScreen:undefined;
 
 };
 
-type TemplatesSectionComNavigationProp = StackNavigationProp<RootStackParamList, 'Surveyor'>;
+type TemplatesSectionComNavigationProp = StackNavigationProp<RootStackParamList, 'Researcher'>;
 
 const TemplatesSectionCom = () => {
   // Get the navigation object from useNavigation inside the component
@@ -38,7 +38,7 @@ const TemplatesSectionCom = () => {
     { name: 'Template 3', screen: 'Template3', image: require('../assets/images/Temp3.png') },
     { name: 'Template 4', screen: 'Template4', image: require('../assets/images/Temp4.png') },
     { name: 'Template 5', screen: 'Template5', image: require('../assets/images/Temp5.png') },
-    { name: 'Template 6', screen: 'Surveyor', image: require('../assets/images/Temp5.png') },
+    { name: 'Template 6', screen: 'Researcher', image: require('../assets/images/Temp5.png') },
   ];
 
   return (

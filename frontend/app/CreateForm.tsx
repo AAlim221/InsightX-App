@@ -47,53 +47,63 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
   const [questions, setQuestions] = useState<Question[]>([
     { question: "", type: "", options: [] },
   ]);
-// people information
+  // people information
+
   const handlePeopleInfoChange = (updatedInfo: { [key: string]: string }) => {
     setPeopleDetails((prev) => ({ ...prev, ...updatedInfo }));
   };
+
   //update grid
   const updateGrid = (index: number, rows: string[], columns: string[]) => {
     setQuestions((prevQuestions) =>
-      prevQuestions.map((q, i) => 
+      prevQuestions.map((q, i) =>
         i === index ? { ...q, rows: [...rows], columns: [...columns] } : q
       )
     );
   };
-// Update question handle
-const updateQuestion = (index: number, key: keyof Question, value: any) => {
-  setQuestions((prevQuestions) =>
-    prevQuestions.map((q, i) => {
-      if (i === index) {
-        const updatedQuestion = { ...q, [key]: Array.isArray(value) ? [...value] : value };
+  // Update question handle
+  const updateQuestion = (index: number, key: keyof Question, value: any) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q, i) => {
+        if (i === index) {
+          const updatedQuestion = {
+            ...q,
+            [key]: Array.isArray(value) ? [...value] : value,
+          };
 
-        // Ensure that rows and columns persist when updating grid-related types
-        if (key === "type" && (value === "multiple-choice-grid" || value === "checkbox-grid")) {
-          updatedQuestion.rows = q.rows && q.rows.length > 0 ? [...q.rows] : ["Row 1"];
-          updatedQuestion.columns = q.columns && q.columns.length > 0 ? [...q.columns] : ["Column 1"];
+          // Ensure that rows and columns persist when updating grid-related types
+          if (
+            key === "type" &&
+            (value === "multiple-choice-grid" || value === "checkbox-grid")
+          ) {
+            updatedQuestion.rows =
+              q.rows && q.rows.length > 0 ? [...q.rows] : ["Row 1"];
+            updatedQuestion.columns =
+              q.columns && q.columns.length > 0 ? [...q.columns] : ["Column 1"];
+          }
+
+          return updatedQuestion;
         }
-
-        return updatedQuestion;
-      }
-      return q;
-    })
-  );
-};
-// add question handle
+        return q;
+      })
+    );
+  };
+  // add question handle
   const addQuestion = () => {
     setQuestions([
       ...questions,
       { question: "", type: "", options: [], rows: [], columns: [] },
     ]);
   };
-// Copy Question
+  // Copy Question
   const copyQuestion = (index: number) => {
     setQuestions([...questions, { ...questions[index] }]);
   };
-// Delete Question
+  // Delete Question
   const deleteQuestion = (index: number) => {
     setQuestions(questions.filter((_, i) => i !== index));
   };
-//Option Genarate
+  //Option Genarate
   const generateGridOptions = (
     numRows: number,
     numColumns: number
@@ -104,106 +114,170 @@ const updateQuestion = (index: number, key: keyof Question, value: any) => {
     }
     return newOptions;
   };
-// Handle Submit
-const handleSubmit = async () => {
-  console.log("Title:", title);
-  console.log("Questions:", questions);
+  // Handle Submit
+  const handleSubmit = async () => {
+    console.log("Title:", title);
+    console.log("Questions:", questions);
 
-  // Validate if title or any question is empty or has invalid type
-  if (!title.trim() || questions.some((q) => q.question.trim() === "" || !q.type)) {
-    Alert.alert("Error", "Please add a title and valid questions.");
-    return;
-  }
-
-  // Ensure options are provided only for multiple-choice or checkbox questions
-  if (questions.some((q) =>
-    (q.type === "multiple-choice" || q.type === "checkboxes") && (!q.options || q.options.length === 0)
-  )) {
-    Alert.alert("Error", "Options must be provided for multiple-choice and checkbox questions.");
-    return;
-  }
-  //For check-box-grid and multiple-choice-grid
-  if (questions.some((q) =>
-    (q.type === "multiple-choice-grid" || q.type === "checkbox-grid") &&
-    (!q.rows || q.rows.length === 0 || !q.columns || q.columns.length === 0)
-  )) {
-    Alert.alert("Error", "Rows and Columns must be provided for grid-type questions.");
-    return;
-  }
-  if (questions.some((q) => {
-  if ((q.type === "multiple-choice" || q.type === "checkboxes") && (!q.options || q.options.length === 0)) {
-      Alert.alert("Error", "Options must be provided for multiple-choice and checkbox questions.");
-      return true;
-  }
-  if ((q.type === "multiple-choice-grid" || q.type === "checkbox-grid") && 
-      (!q.rows || q.rows.length === 0 || !q.columns || q.columns.length === 0)) {
-      Alert.alert("Error", "Both rows and columns must be provided for grid-based questions.");
-      return true;
-  }
-  return false;
-})) {
-  return;
-}
-
-
-const cleanedQuestions = questions.map((q) => ({
-...q,
-
-// For multiple-choice or checkboxes, keep options; otherwise, set it as empty array
-options: ["multiple-choice", "checkboxes"].includes(q.type) ? q.options ?? [] :
-  // For grid types, generate options based on rows and columns
-  (["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? generateGridOptions(q.rows?.length ?? 0, q.columns?.length ?? 0) : []),
-
-// For grid types (multiple-choice-grid or checkbox-grid), keep rows and columns; otherwise, set them as empty arrays
-rows: ["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? q.rows ?? [] : [],
-columns: ["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? q.columns ?? [] : [],
-
-// For linear-scale or rating types, keep min and max values
-minValue: ["linear-scale", "rating"].includes(q.type) ? q.minValue : undefined,
-maxValue: ["linear-scale", "rating"].includes(q.type) ? q.maxValue : undefined,
-}));
-
-// Function to generate options for the grid based on rows and columns
-function generateGridOptions(numRows: number, numColumns: number): string[] {
-const newOptions = [];
-for (let i = 0; i < numRows * numColumns; i++) {
-  newOptions.push(`Option ${i + 1}`);
-}
-return newOptions;
-}
-
-  // Validate min and max values for "linear-scale" and "rating"
-  if (
-    cleanedQuestions.some(
-      (q) =>
-        ["linear-scale", "rating"].includes(q.type) &&
-        (q.minValue === undefined || q.maxValue === undefined)
-    )
-  ) {
-    Alert.alert("Error", "Please provide Min and Max values for Linear Scale & Rating questions.");
-    return;
-  }
-
-  const formData = { title, peopleDetails:{}, surveyName, surveyDetails, questions };
-  console.log("Form Data Sent:", JSON.stringify(formData, null, 2)); // Debugging log
-  try {
-    const response = await fetch("http://192.168.0.183:8082/api/v1/auth/createForm", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-//form submit and navigate
-    const responseData = await response.json();
-    if (response.ok) {
-      Alert.alert("Success", "Form Published!", [{ text: "OK", onPress: () => router.push("/Surveyor") }]);
-    } else {
-      Alert.alert("Error", `Failed to save form: ${responseData.message || "Unknown error"}`);
+    // Validate if title or any question is empty or has invalid type
+    if (
+      !title.trim() ||
+      questions.some((q) => q.question.trim() === "" || !q.type)
+    ) {
+      Alert.alert("Error", "Please add a title and valid questions.");
+      return;
     }
-  } catch (error) {
-    Alert.alert("Error", "An error occurred.");
-  }
-};
 
+    // Ensure options are provided only for multiple-choice or checkbox questions
+    if (
+      questions.some(
+        (q) =>
+          (q.type === "multiple-choice" || q.type === "checkboxes") &&
+          (!q.options || q.options.length === 0)
+      )
+    ) {
+      Alert.alert(
+        "Error",
+        "Options must be provided for multiple-choice and checkbox questions."
+      );
+      return;
+    }
+    //For check-box-grid and multiple-choice-grid
+    if (
+      questions.some(
+        (q) =>
+          (q.type === "multiple-choice-grid" || q.type === "checkbox-grid") &&
+          (!q.rows ||
+            q.rows.length === 0 ||
+            !q.columns ||
+            q.columns.length === 0)
+      )
+    ) {
+      Alert.alert(
+        "Error",
+        "Rows and Columns must be provided for grid-type questions."
+      );
+      return;
+    }
+    if (
+      questions.some((q) => {
+        if (
+          (q.type === "multiple-choice" || q.type === "checkboxes") &&
+          (!q.options || q.options.length === 0)
+        ) {
+          Alert.alert(
+            "Error",
+            "Options must be provided for multiple-choice and checkbox questions."
+          );
+          return true;
+        }
+        if (
+          (q.type === "multiple-choice-grid" || q.type === "checkbox-grid") &&
+          (!q.rows ||
+            q.rows.length === 0 ||
+            !q.columns ||
+            q.columns.length === 0)
+        ) {
+          Alert.alert(
+            "Error",
+            "Both rows and columns must be provided for grid-based questions."
+          );
+          return true;
+        }
+        return false;
+      })
+    ) {
+      return;
+    }
+
+    const cleanedQuestions = questions.map((q) => ({
+      ...q,
+
+      // For multiple-choice or checkboxes, keep options; otherwise, set it as empty array
+      options: ["multiple-choice", "checkboxes"].includes(q.type)
+        ? q.options ?? []
+        : // For grid types, generate options based on rows and columns
+        ["multiple-choice-grid", "checkbox-grid"].includes(q.type)
+        ? generateGridOptions(q.rows?.length ?? 0, q.columns?.length ?? 0)
+        : [],
+
+      // For grid types (multiple-choice-grid or checkbox-grid), keep rows and columns; otherwise, set them as empty arrays
+      rows: ["multiple-choice-grid", "checkbox-grid"].includes(q.type)
+        ? q.rows ?? []
+        : [],
+      columns: ["multiple-choice-grid", "checkbox-grid"].includes(q.type)
+        ? q.columns ?? []
+        : [],
+
+      // For linear-scale or rating types, keep min and max values
+      minValue: ["linear-scale", "rating"].includes(q.type)
+        ? q.minValue
+        : undefined,
+      maxValue: ["linear-scale", "rating"].includes(q.type)
+        ? q.maxValue
+        : undefined,
+    }));
+
+    // Function to generate options for the grid based on rows and columns
+    function generateGridOptions(
+      numRows: number,
+      numColumns: number
+    ): string[] {
+      const newOptions = [];
+      for (let i = 0; i < numRows * numColumns; i++) {
+        newOptions.push(`Option ${i + 1}`);
+      }
+      return newOptions;
+    }
+
+    // Validate min and max values for "linear-scale" and "rating"
+    if (
+      cleanedQuestions.some(
+        (q) =>
+          ["linear-scale", "rating"].includes(q.type) &&
+          (q.minValue === undefined || q.maxValue === undefined)
+      )
+    ) {
+      Alert.alert(
+        "Error",
+        "Please provide Min and Max values for Linear Scale & Rating questions."
+      );
+      return;
+    }
+
+    const formData = {
+      title,
+      peopleDetails: {},
+      surveyName,
+      surveyDetails,
+      questions,
+    };
+    console.log("Form Data Sent:", JSON.stringify(formData, null, 2)); // Debugging log
+    try {
+      const response = await fetch(
+        "http://172.20.26.54:8082/api/v1/auth/createForm",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+      //form submit and navigate
+      const responseData = await response.json();
+      if (response.ok) {
+        Alert.alert("Success", "Form Published!", [
+          { text: "OK", onPress: () => router.push("/Researcher") },
+        ]);
+      } else {
+        Alert.alert(
+          "Error",
+          `Failed to save form: ${responseData.message || "Unknown error"}`
+        );
+      }
+    } catch (error) {
+      Alert.alert("Error", "An error occurred.");
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-purple-500">
@@ -217,7 +291,9 @@ return newOptions;
             onChangeText={setTitle}
           />
         </View>
+        
         <PeopleInfoCom onPeopleInfoChange={handlePeopleInfoChange} />
+
         <View className="mt-4 bg-white p-4 rounded-lg shadow-md gap-4">
           <TextInput
             placeholder="Survey Name"
@@ -258,8 +334,6 @@ return newOptions;
                   updateQuestion(i, "rows", rows);
                   updateQuestion(i, "columns", columns);
                 }}
-                
-                
                 onCopyQuestion={copyQuestion}
                 onDeleteQuestion={deleteQuestion}
               />

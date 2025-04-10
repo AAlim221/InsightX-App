@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Modal,SafeAreaView } from 'react-native';
 
 interface PeopleInfoComProps {
   onPeopleInfoChange: (updatedInfo: { [key: string]: string }) => void;
@@ -17,35 +17,36 @@ const PeopleInfoCom: React.FC<PeopleInfoComProps> = ({ onPeopleInfoChange }) => 
 
   const handleSelectField = (option: string) => {
     if (!selectedFields.has(option)) {
-      setSelectedFields(new Map(selectedFields.set(option, "")));
+      const updatedFields = new Map(selectedFields);
+      updatedFields.set(option, "");
+      setSelectedFields(updatedFields);
+      notifyChange(updatedFields);
     }
     setIsModalVisible(false);
   };
-
+  
   const handleInputChange = (field: string, value: string) => {
-    const updatedFields = new Map(selectedFields.set(field, value));
+    const updatedFields = new Map(selectedFields);
+    updatedFields.set(field, value);
     setSelectedFields(updatedFields);
-
-    // Notify parent with the updated info
-    const updatedInfo = Object.fromEntries(updatedFields);
-    onPeopleInfoChange(updatedInfo);
+    notifyChange(updatedFields);
   };
-
+  
   const handleRemoveField = (field: string) => {
     const updatedFields = new Map(selectedFields);
     updatedFields.delete(field);
     setSelectedFields(updatedFields);
-
-    // Notify parent of the updated info
-    const updatedInfo = Object.fromEntries(updatedFields);
-    onPeopleInfoChange(updatedInfo);
+    notifyChange(updatedFields);
   };
- 
+  
+  const notifyChange = (fields: Map<string, string>) => {
+    onPeopleInfoChange(Object.fromEntries(fields));
+  };
   return (
-    <View className="flex-1 justify-center items-center bg-purple-500 p-4">
+    <SafeAreaView className="flex-1 justify-center items-center bg-purple-500 p-4">
       {/* Modal Trigger Button */}
       <TouchableOpacity 
-        className="w-full bg-white p-4 mb-6 rounded-md" 
+        className="w-full mt-2 mb-4  bg-white p-4 rounded-lg shadow-md" 
         onPress={() => setIsModalVisible(true)}
       >
         <Text className="text-black w-full text-xl font-bold text-center">People Information ▼</Text>
@@ -58,7 +59,7 @@ const PeopleInfoCom: React.FC<PeopleInfoComProps> = ({ onPeopleInfoChange }) => 
         visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View className="flex-1 justify-center items-center bg-black/50">
+        <View className="w-full flex-1 justify-center items-center bg-black/50">
           <View className="w-[90%] bg-white p-4 rounded-md">
             <Text className="text-xl font-bold text-center mb-4">Select Information</Text>
 
@@ -113,7 +114,7 @@ const PeopleInfoCom: React.FC<PeopleInfoComProps> = ({ onPeopleInfoChange }) => 
           ))
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

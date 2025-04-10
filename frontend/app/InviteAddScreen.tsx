@@ -3,8 +3,7 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { SafeAreaView } from "react-native-safe-area-context";
-
-
+import ProfileCom from '@/components/ProfileCom';
 const InviteAddScreen = () => {
   const navigation = useNavigation();
 
@@ -16,24 +15,17 @@ const InviteAddScreen = () => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
-        <FontAwesome name="user-circle" size={32} color="black" />
-      </View>
 
-      {/* Researcher Details */}
-      <View className="bg-gray-300 p-3 rounded-lg mb-2">
-        <Text className="text-black font-bold">Researcher Name</Text>
+       {/* Profile Icon */}
+       <ProfileCom />
       </View>
-      <View className="bg-gray-300 p-3 rounded-lg mb-4">
-        <Text className="text-black font-bold">Researcher ID</Text>
-      </View>
-
       {/* Add Surveyor Button */}
-      <TouchableOpacity className="bg-gray-300 p-3 rounded-lg mb-4">
-        <Text className="text-black font-bold text-center">Add Surveyor</Text>
+      <TouchableOpacity className="mb-8 p-3 rounded-lg ">
+        <Text className="text-black font-bold text-left text-3xl">Add a Surveyor!</Text>
       </TouchableOpacity>
 
       {/* Input Fields */}
-      {['Surveyor Name', 'Surveyor ID', 'Password', 'Mobile No', 'NID/Passport'].map((placeholder, index) => (
+      {['Surveyor Name','Surveyor Gmail', 'Surveyor ID', 'Password', 'Confirm Password','Mobile No', 'NID/Passport'].map((placeholder, index) => (
         <TextInput
           key={index}
           placeholder={placeholder}

@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from '@/app/HomeScreen';
 import CreateForm from './CreateForm';
 import Template1 from './Template1';
@@ -9,8 +8,12 @@ import Template2 from './Template2';
 import Template3 from './Template3';
 import Template4 from './Template4';
 import Template5 from './Template5';
-import Surveyor from '@/app/Surveyor';
+import Researcher from '@/app/Researcher';
 import InviteAddScreen from './InviteAddScreen';
+import SurveyorLogin from '@/app/SurveyorLogin';
+import SettingsMenu from "@/app/SettingsMenu";
+import ProfileMenu from "@/app/ProfileMenu";
+
 //import Drawer from '@/app/Drawer';
 
 // Define types for your stack navigator screens
@@ -22,30 +25,20 @@ export type RootStackParamList = {
   Template3: undefined;
   Template4: undefined;
   Template5: undefined;
-  Surveyor: undefined;
-  Drawer: undefined;
+  Researcher: undefined;
+  SettingsMenu: undefined;
   InviteAddScreen: undefined;
+  SurveyorLogin: undefined;
+  ProfileMenu: undefined;
 };
 
 // Create the native stack navigator using the defined types
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const Drawer = createDrawerNavigator();
-
-// Drawer Navigator for screens with a drawer menu
-const DrawerNavigator = () => (
-  <Drawer.Navigator>
-    <Drawer.Screen name="HomeScreen" component={HomeScreen} />
-  </Drawer.Navigator>
-);
-
 // Stack Navigator that includes both the drawer and the other screens
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen" screenOptions={{ headerShown: false }}>
-        {/* Drawer as one of the stack screens */}
-        <Stack.Screen name="Drawer" component={DrawerNavigator} />
-        
+      <Stack.Navigator initialRouteName="HomeScreen" screenOptions={{ headerShown: false }}>  
         {/* Other stack screens */}
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
         <Stack.Screen name="CreateForm" component={CreateForm} />
@@ -54,10 +47,11 @@ const AppNavigator = () => {
         <Stack.Screen name="Template3" component={Template3} />
         <Stack.Screen name="Template4" component={Template4} />
         <Stack.Screen name="Template5" component={Template5} />
-        <Stack.Screen name="Surveyor" component={Surveyor} />
+        <Stack.Screen name="Researcher" component={Researcher} />
         <Stack.Screen name="InviteAddScreen" component={InviteAddScreen} />
-
-
+        <Stack.Screen name="SurveyorLogin" component={SurveyorLogin} />
+        <Stack.Screen name="SettingsMenu" component={SettingsMenu} />
+        <Stack.Screen name="ProfileMenu" component={ProfileMenu} />
       </Stack.Navigator>
     </NavigationContainer>
   );
