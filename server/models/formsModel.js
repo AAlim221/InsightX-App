@@ -29,16 +29,18 @@ const FormSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     peopleDetails: {
-      name: { type: String,default:"" },
-      age: { type: Number,default:null },
-      nid: { type: String,default: "" },
-      mobile: { type: String,default: "" },
-      division: { type: String ,default: ""},
-      district: { type: String ,default: ""}
+      name: { type: String,required: false },
+      mobile: { type: String,required: false },
+      age: { type: Number, required: false },
+      nid: { type: String, required: false },
+      division: { type: String, required: false },
+      district: { type: String, required: false }
     },
+    surveyName: { type: String, required: false },
+    surveyDetails: { type: String, required: false },
     questions: [QuestionSchema]
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Form', FormSchema); 
+module.exports = mongoose.model('Form', FormSchema);

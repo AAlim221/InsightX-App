@@ -4,7 +4,7 @@ const formsModel = require('../models/formsModel');
 // Create a new form
 const createForm = async (req, res) => {
   try {
-    const { title, questions,peopleDetails } = req.body;
+    const { title,surveyName,surveyDetails, questions,peopleDetails } = req.body;
 
     console.log("Received Data:", req.body); // Debugging log
     // Validate the required fields
@@ -33,7 +33,7 @@ const createForm = async (req, res) => {
     }
 
     // Create the new form object
-    const newForm = new formsModel({ title, peopleDetails: peopleDetails || {}, questions });
+    const newForm = new formsModel({ title,surveyName,surveyDetails, peopleDetails: peopleDetails || {}, questions });
 
     // Save the form to the database
     await newForm.save();

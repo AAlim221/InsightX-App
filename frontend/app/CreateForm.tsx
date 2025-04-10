@@ -33,14 +33,16 @@ type Props = NativeStackScreenProps<RootStackParamList, "CreateForm">;
 
 const CreateForm: React.FC<Props> = ({ navigation }) => {
   const [title, setTitle] = useState("");
+
+
   const [peopleDetails, setPeopleDetails] = useState({
-    name: "",
-    age: "",
-    nid: "",
-    mobile: "",
-    division: "",
-    district: "",
-    thana: "",
+    name: "o",
+    age: "0",
+    nid: "o",
+    mobile: "0",
+    division: "o",
+    district: "o",
+    thana: "o",
   });
   const [surveyName, setSurveyName] = useState("");
   const [surveyDetails, setSurveyDetails] = useState("");
@@ -50,8 +52,13 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
   // people information
 
   const handlePeopleInfoChange = (updatedInfo: { [key: string]: string }) => {
-    setPeopleDetails((prev) => ({ ...prev, ...updatedInfo }));
-  };
+    setPeopleDetails((prev) => ({
+      ...prev,
+      ...updatedInfo,  // Merge the selected fields into peopleDetails
+    }));
+  }
+   
+
 
   //update grid
   const updateGrid = (index: number, rows: string[], columns: string[]) => {
@@ -81,7 +88,12 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
             updatedQuestion.columns =
               q.columns && q.columns.length > 0 ? [...q.columns] : ["Column 1"];
           }
-
+            
+          // Ensure min and max values persist for rating or linear-scale type questions
+          if (key === "type" && ["linear-scale", "rating"].includes(value)) {
+            updatedQuestion.minValue = updatedQuestion.minValue ?? 0;
+            updatedQuestion.maxValue = updatedQuestion.maxValue ?? 10;
+          }
           return updatedQuestion;
         }
         return q;
@@ -117,17 +129,29 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
   // Handle Submit
   const handleSubmit = async () => {
     console.log("Title:", title);
-    console.log("Questions:", questions);
+    console.log("People Details:", peopleDetails); // Only the selected fields will be here
 
+   
     // Validate if title or any question is empty or has invalid type
-    if (
-      !title.trim() ||
-      questions.some((q) => q.question.trim() === "" || !q.type)
-    ) {
+    if (!title.trim() || questions.some((q) => q.question.trim() === "" || !q.type)) {
       Alert.alert("Error", "Please add a title and valid questions.");
       return;
     }
 
+ // Validate min and max values for "linear-scale" and "rating"
+ if (
+  questions.some(
+    (q) =>
+      (q.type === "linear-scale" || q.type === "rating") &&
+      (q.minValue === undefined || q.maxValue === undefined)
+  )
+) {
+  Alert.alert(
+    "Error",
+    "Please provide both Min and Max values for Linear Scale & Rating questions."
+  );
+  return;
+}
     // Ensure options are provided only for multiple-choice or checkbox questions
     if (
       questions.some(
@@ -189,73 +213,63 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
     ) {
       return;
     }
+    // Only include selected (empty string) peopleDetails keys
+const selectedPeopleDetails: { [key: string]: string } = {};
+Object.entries(peopleDetails).forEach(([key, value]) => {
+  if (value === "") {
+    selectedPeopleDetails[key] = value;
+  }
+});
 
     const cleanedQuestions = questions.map((q) => ({
       ...q,
-
+      
       // For multiple-choice or checkboxes, keep options; otherwise, set it as empty array
-      options: ["multiple-choice", "checkboxes"].includes(q.type)
-        ? q.options ?? []
-        : // For grid types, generate options based on rows and columns
-        ["multiple-choice-grid", "checkbox-grid"].includes(q.type)
-        ? generateGridOptions(q.rows?.length ?? 0, q.columns?.length ?? 0)
-        : [],
-
+      options: ["multiple-choice", "checkboxes"].includes(q.type) ? q.options ?? [] :
+        // For grid types, generate options based on rows and columns
+        (["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? generateGridOptions(q.rows?.length ?? 0, q.columns?.length ?? 0) : []),
+      
       // For grid types (multiple-choice-grid or checkbox-grid), keep rows and columns; otherwise, set them as empty arrays
-      rows: ["multiple-choice-grid", "checkbox-grid"].includes(q.type)
-        ? q.rows ?? []
-        : [],
-      columns: ["multiple-choice-grid", "checkbox-grid"].includes(q.type)
-        ? q.columns ?? []
-        : [],
-
+      rows: ["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? q.rows ?? [] : [],
+      columns: ["multiple-choice-grid", "checkbox-grid"].includes(q.type) ? q.columns ?? [] : [],
+      
       // For linear-scale or rating types, keep min and max values
-      minValue: ["linear-scale", "rating"].includes(q.type)
-        ? q.minValue
-        : undefined,
-      maxValue: ["linear-scale", "rating"].includes(q.type)
-        ? q.maxValue
-        : undefined,
+      minValue: ["linear-scale", "rating"].includes(q.type) ? q.minValue : undefined,
+      maxValue: ["linear-scale", "rating"].includes(q.type) ? q.maxValue : undefined,
     }));
-
+    
     // Function to generate options for the grid based on rows and columns
-    function generateGridOptions(
-      numRows: number,
-      numColumns: number
-    ): string[] {
+    function generateGridOptions(numRows: number, numColumns: number): string[] {
       const newOptions = [];
       for (let i = 0; i < numRows * numColumns; i++) {
         newOptions.push(`Option ${i + 1}`);
       }
       return newOptions;
     }
-
-    // Validate min and max values for "linear-scale" and "rating"
-    if (
-      cleanedQuestions.some(
-        (q) =>
-          ["linear-scale", "rating"].includes(q.type) &&
-          (q.minValue === undefined || q.maxValue === undefined)
-      )
-    ) {
-      Alert.alert(
-        "Error",
-        "Please provide Min and Max values for Linear Scale & Rating questions."
-      );
-      return;
-    }
+    
+        // Validate min and max values for "linear-scale" and "rating"
+        if (
+          cleanedQuestions.some(
+            (q) =>
+              ["linear-scale", "rating"].includes(q.type) &&
+              (q.minValue === undefined || q.maxValue === undefined)
+          )
+        ) {
+          Alert.alert("Error", "Please provide Min and Max values for Linear Scale & Rating questions.");
+          return;
+        }
 
     const formData = {
       title,
-      peopleDetails: {},
+      peopleDetails: selectedPeopleDetails,
       surveyName,
       surveyDetails,
-      questions,
+      questions: cleanedQuestions,
     };
     console.log("Form Data Sent:", JSON.stringify(formData, null, 2)); // Debugging log
     try {
       const response = await fetch(
-        "http://172.20.26.54:8082/api/v1/auth/createForm",
+        "http://192.168.0.183:8082/api/v1/auth/createForm",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -321,6 +335,8 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
                 options={item.options || []}
                 rows={item.rows || []}
                 columns={item.columns || []}
+                minValue={item.minValue} // Passing min and max values to the component
+                maxValue={item.maxValue}
                 onQuestionChange={(i: number, value: string) =>
                   updateQuestion(i, "question", value)
                 }
@@ -334,6 +350,12 @@ const CreateForm: React.FC<Props> = ({ navigation }) => {
                   updateQuestion(i, "rows", rows);
                   updateQuestion(i, "columns", columns);
                 }}
+                onMinValueChange={(i: number, value: number) =>
+                  updateQuestion(i, "minValue", value)
+                }
+                onMaxValueChange={(i: number, value: number) =>
+                  updateQuestion(i, "maxValue", value)
+                }
                 onCopyQuestion={copyQuestion}
                 onDeleteQuestion={deleteQuestion}
               />

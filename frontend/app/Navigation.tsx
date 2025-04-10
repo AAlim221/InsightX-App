@@ -9,10 +9,11 @@ import Template3 from './Template3';
 import Template4 from './Template4';
 import Template5 from './Template5';
 import Researcher from '@/app/Researcher';
-import InviteAddScreen from './InviteAddScreen';
+import SurveyorRegister from './SurveyorRegister';
 import SurveyorLogin from '@/app/SurveyorLogin';
 import SettingsMenu from "@/app/SettingsMenu";
 import ProfileMenu from "@/app/ProfileMenu";
+import InviteScreen from '@/app/InviteScreen';
 
 //import Drawer from '@/app/Drawer';
 
@@ -27,9 +28,11 @@ export type RootStackParamList = {
   Template5: undefined;
   Researcher: undefined;
   SettingsMenu: undefined;
-  InviteAddScreen: undefined;
+  SurveyorRegister: undefined;
   SurveyorLogin: undefined;
   ProfileMenu: undefined;
+  InviteScreen: undefined;
+
 };
 
 // Create the native stack navigator using the defined types
@@ -48,10 +51,12 @@ const AppNavigator = () => {
         <Stack.Screen name="Template4" component={Template4} />
         <Stack.Screen name="Template5" component={Template5} />
         <Stack.Screen name="Researcher" component={Researcher} />
-        <Stack.Screen name="InviteAddScreen" component={InviteAddScreen} />
+        <Stack.Screen name="SurveyorRegister" component={SurveyorRegister} />
         <Stack.Screen name="SurveyorLogin" component={SurveyorLogin} />
         <Stack.Screen name="SettingsMenu" component={SettingsMenu} />
         <Stack.Screen name="ProfileMenu" component={ProfileMenu} />
+        <Stack.Screen name="InviteScreen" component={InviteScreen} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

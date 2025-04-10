@@ -11,7 +11,7 @@ const SettingsMenu = (props: any) => {
 
   const menuItems = [
     { label: 'Profile', route: 'ProfileMenu' },
-    { label: 'Add Surveyor', route: 'InviteAddScreen' },
+    { label: 'Add Surveyor', route: 'SurveyorRegister' },
     { label: 'Settings', route: 'Settings' },
     { label: 'Notifications', route: 'Notifications' },
     { label: 'Mail Support', route: 'MailSupport' },

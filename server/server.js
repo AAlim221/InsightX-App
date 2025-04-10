@@ -24,11 +24,12 @@ app.use(morgan('dev'))
 app.use('/api/v1/auth',require("./routes/userRoutes"));
 app.use('/api/v1/auth',require("./routes/formRoutes"));
 app.use("/api/v1/auth", require("./routes/responseRoutes")); 
+app.use("/api/v1/auth", require("./routes/surveyorRoutes")); 
 
 //PORT
 const PORT = process.env.PORT || 8082
 
 //listen
 app.listen(PORT,() => {
-    console.log(`Server Running ${PORT}`.bgGreen.white)   
+    console.log(`Server Running ${PORT}`.bgGreen.white)
 });

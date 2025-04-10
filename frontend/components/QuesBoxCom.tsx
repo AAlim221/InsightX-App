@@ -18,12 +18,16 @@ interface QuesBoxProps {
   options: string[];
   rows?: string[];
   columns?: string[];
+  minValue?: number;  // Add minValue and maxValue as optional
+  maxValue?: number;
   onQuestionChange: (index: number, value: string) => void;
   onTypeChange: (index: number, type: string) => void;
   onOptionsChange: (index: number, options: string[]) => void;
   onGridChange?: (index: number, rows: string[], columns: string[]) => void;
   onCopyQuestion: (index: number) => void;
   onDeleteQuestion: (index: number) => void;
+  onMinValueChange: (index: number, minValue: number) => void;  // Added this
+  onMaxValueChange: (index: number, maxValue: number) => void;  // Added this
 }
 
 const QuestionBoxCom: React.FC<QuesBoxProps> = ({
@@ -33,12 +37,16 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
   options,
   rows = [],
   columns = [],
+  minValue,
+  maxValue,
   onQuestionChange,
   onTypeChange,
   onOptionsChange,
   onGridChange,
   onCopyQuestion,
   onDeleteQuestion,
+  onMinValueChange,  // Destructure the min/max change handlers
+  onMaxValueChange,
 }) => {
   const [isRequired, setIsRequired] = useState(false);
   const [mcqOptions, setMcqOptions] = useState(options);
@@ -56,7 +64,8 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
     "multiple-choice-grid",
     "checkbox-grid",
   ];
-// handle Option slection
+
+  // handle Option slection
   const handleOptionSelect = (option: string) => {
     setDropdownVisible(false);
     setMcqOptions(option === "multiple-choice" || option === "checkboxes" ? [""] : []);
@@ -64,24 +73,28 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
     setGridColumns(option.includes("grid") ? [""] : []);
     onTypeChange(index, option);
   };
-//Handle Mcq 
+
+  // Handle Mcq Change
   const handleMcqChange = (text: string, optionIndex: number) => {
     const updatedOptions = [...mcqOptions];
     updatedOptions[optionIndex] = text;
     setMcqOptions(updatedOptions);
     onOptionsChange(index, updatedOptions);
   };
-//Handle Add Option
+
+  // Handle Add Option
   const handleAddOption = () => {
     const updatedOptions = [...mcqOptions, ""];
     setMcqOptions(updatedOptions);
     onOptionsChange(index, updatedOptions);
   };
-// Option Generate
+
+  // Option Generate for Grid
   const generateGridOptions = (numRows: number, numColumns: number): string[] => {
     return Array.from({ length: numRows * numColumns }, (_, i) => `Option ${i + 1}`);
   };
-// handle Grid Update
+
+  // handle Grid Update
   const handleGridUpdate = (updatedRows: string[], updatedColumns: string[]) => {
     setGridRows([...updatedRows]);
     setGridColumns([...updatedColumns]);
@@ -90,24 +103,26 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
     }
     onOptionsChange(index, generateGridOptions(updatedRows.length, updatedColumns.length));
   };
-// handle RowChange
+
+  // handle Row Change
   const handleRowChange = (text: string, rowIndex: number) => {
     const updatedRows = [...gridRows];
     updatedRows[rowIndex] = text;
     handleGridUpdate(updatedRows, gridColumns);
   };
-// handle Column Change
+
+  // handle Column Change
   const handleColumnChange = (text: string, colIndex: number) => {
     const updatedColumns = [...gridColumns];
     updatedColumns[colIndex] = text;
     handleGridUpdate(gridRows, updatedColumns);
   };
-// Handle add row
-  const handleAddRow = () =>
-    handleGridUpdate([...gridRows, `Row ${gridRows.length + 1}`], gridColumns);
-// Handle add column
-  const handleAddColumn = () =>
-    handleGridUpdate(gridRows, [...gridColumns, `Col ${gridColumns.length + 1}`]);
+
+  // Handle Add Row
+  const handleAddRow = () => handleGridUpdate([...gridRows, `Row ${gridRows.length + 1}`], gridColumns);
+
+  // Handle Add Column
+  const handleAddColumn = () => handleGridUpdate(gridRows, [...gridColumns, `Col ${gridColumns.length + 1}`]);
 
   return (
     <SafeAreaView>
@@ -120,7 +135,7 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
           onChangeText={(text) => onQuestionChange(index, text)}
         />
 
-        {/* Dropdown */}
+        {/* Dropdown for Type Selection */}
         <View className="bg-white p-4 mt-4 rounded-lg space-y-3 shadow-md">
           <TouchableOpacity
             onPress={() => setDropdownVisible(!dropdownVisible)}
@@ -158,7 +173,7 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
             placeholder="Type your answer here"
             className="bg-white text-black mt-2 p-2 rounded-lg shadow-lg border border-gray-200"
             value=""
-            onChangeText={(text) => {}}
+            onChangeText={() => {}}
           />
         )}
 
@@ -169,7 +184,7 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
             multiline
             numberOfLines={4}
             value=""
-            onChangeText={(text) => {}}
+            onChangeText={() => {}}
           />
         )}
 
@@ -180,15 +195,19 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
               placeholder="Min Value"
               keyboardType="numeric"
               className="bg-white p-2 rounded-md mt-2"
-              value=""
-              onChangeText={(text) => {}}
+              value={minValue ? minValue.toString() : ""}
+              onChangeText={(number) => {
+                onMinValueChange(index, Number(number));
+              }}
             />
             <TextInput
               placeholder="Max Value"
               keyboardType="numeric"
               className="bg-white p-2 rounded-md mt-2"
-              value=""
-              onChangeText={(text) => {}}
+              value={maxValue ? maxValue.toString() : ""}
+              onChangeText={(number) => {
+                onMaxValueChange(index, Number(number));
+              }}
             />
           </View>
         )}
@@ -198,11 +217,7 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
             {mcqOptions.map((option, optionIndex) => (
               <View key={optionIndex} className="flex-row items-center mt-2">
                 <Ionicons
-                  name={
-                    type === "multiple-choice"
-                      ? "radio-button-off"
-                      : "checkbox-outline"
-                  }
+                  name={type === "multiple-choice" ? "radio-button-off" : "checkbox-outline"}
                   size={24}
                   color="black"
                 />
@@ -266,10 +281,7 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
 
         {/* Bottom actions */}
         <View className="mt-8 flex-row justify-between items-center">
-          <TouchableOpacity
-            onPress={() => onCopyQuestion(index)}
-            className="mr-4"
-          >
+          <TouchableOpacity onPress={() => onCopyQuestion(index)} className="mr-4">
             <Ionicons name="copy-outline" size={24} color="black" />
           </TouchableOpacity>
 

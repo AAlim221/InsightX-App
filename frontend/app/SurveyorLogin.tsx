@@ -10,6 +10,7 @@ import {
 import { Link, useRouter } from "expo-router";
 import axios from "axios";
 import HeroImage from "@/components/HeroImage";
+
 export default function Login() {
   const router = useRouter();
 
@@ -20,23 +21,28 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       setLoading(true);
+
       if (!email.trim() || !password.trim()) {
         Alert.alert("Error", "Please enter both email and password");
-        setLoading(false);
         return;
       }
 
       const { data } = await axios.post(
         "http://192.168.0.183:8082/api/v1/auth/login",
-        { email, password }
+        { email, password } // Only send email and password, no name required
       );
 
-      alert(data && data.message);
-      console.log("Login data ==>", { email, password });
-      router.push("/SurveyorDashbroad");
+      Alert.alert("Success", data.message || "Login successful");
+      console.log("Login success for:", { email });
+
+      router.push("/SurveyorDashbroad"); // Correct route name
     } catch (error) {
+      console.log("Login error:", error);
+
       if (axios.isAxiosError(error)) {
-        Alert.alert("Error", "Invalid email or password");
+        const message =
+          error.response?.data?.message || "Invalid email or password";
+        Alert.alert("Login Failed", message);
       } else {
         Alert.alert("Error", "An unexpected error occurred");
       }
@@ -48,7 +54,8 @@ export default function Login() {
   return (
     <SafeAreaView className="flex-1 bg-black justify-between pt-12 pb-4">
       {/* Hero Image */}
-       <HeroImage/>
+      <HeroImage />
+
       {/* Login Form */}
       <View className="bg-purple-700 p-6 rounded-3xl shadow-lg mx-4 flex-1 justify-center">
         {/* Welcome Text */}
@@ -95,7 +102,6 @@ export default function Login() {
             {loading ? "Logging in..." : "Login"}
           </Text>
         </TouchableOpacity>
-
       </View>
     </SafeAreaView>
   );
