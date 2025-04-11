@@ -17,10 +17,8 @@ import ProfileCom from '@/components/ProfileCom';
 
 // Type definition for form structure
 type FormType = {
-  id: string;
+  id?: string;
   title: string;
-  field1?: string;
-  field2?: string;
   [key: string]: any;
 };
 
@@ -33,7 +31,7 @@ const ResearcherDashboard = () => {
   // Load forms on mount
   useEffect(() => {
     axios
-      .get('http://192.168.0.183:8082/api/v1/form/listAllForms')
+      .get('http://192.168.0.183:8082/api/v1/auth/listAllForms')
       .then((response) => {
         setForms(response.data);
       })
@@ -45,11 +43,7 @@ const ResearcherDashboard = () => {
   }, []);
 
   const handleBoxPress = (form: FormType) => {
-    setSelectedForm({
-      ...form,
-      field1: form?.field1 || '',
-      field2: form?.field2 || '',
-    });
+    setSelectedForm(form);
     setModalVisible(true);
   };
 
@@ -103,7 +97,7 @@ const ResearcherDashboard = () => {
           <Text className="text-center text-black font-semibold text-lg">Researcher ID</Text>
         </View>
         <TouchableOpacity className="bg-white py-4 mb-4">
-          <Text className="text-center text-black font-semibold text-lg">Work On Template</Text>
+          <Text className="text-center text-black font-semibold text-lg">Researcher All Template here...</Text>
         </TouchableOpacity>
       </View>
 
@@ -116,11 +110,11 @@ const ResearcherDashboard = () => {
         ) : (
           forms.map((form: FormType, index: number) => (
             <TouchableOpacity
-              key={form.id || index}
-              className="bg-gray-400 h-24 my-2 rounded-lg justify-center items-center"
+              key={form._id || index}
+              className="bg-white h-24 my-2 rounded-lg justify-center items-center"
               onPress={() => handleBoxPress(form)}
             >
-              <Text className="text-white font-semibold text-base">
+              <Text className="text-black font-semibold text-base">
                 {form.title || `Form ${index + 1}`}
               </Text>
             </TouchableOpacity>
@@ -128,37 +122,35 @@ const ResearcherDashboard = () => {
         )}
       </ScrollView>
 
-      {/* Modal for form view and input */}
+      {/* Modal for form view */}
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
         <View className="flex-1 justify-center bg-black bg-opacity-70 px-4">
-          <View className="bg-white p-4 rounded-lg">
+          <View className="bg-white p-4 rounded-lg max-h-[90%]">
             <Text className="text-lg font-bold mb-2 text-center">
               {selectedForm?.title || 'Form Details'}
             </Text>
             <ScrollView>
-              <TextInput
-                placeholder="Field 1"
-                value={selectedForm?.field1}
-                onChangeText={(text) =>
-                  setSelectedForm((prev) => ({
-                    ...(prev as FormType),
-                    field1: text,
-                  }))
-                }
-                className="border mb-2 p-2 rounded"
-              />
-              <TextInput
-                placeholder="Field 2"
-                value={selectedForm?.field2}
-                onChangeText={(text) =>
-                  setSelectedForm((prev) => ({
-                    ...(prev as FormType),
-                    field2: text,
-                  }))
-                }
-                className="border mb-4 p-2 rounded"
-              />
-              <View className="flex-row justify-between">
+              {selectedForm &&
+                Object.entries(selectedForm).map(([key, value], index) => {
+                  if (['_id', '__v', 'createdAt', 'updatedAt'].includes(key)) return null;
+
+                  return (
+                    <View key={index} className="mb-3">
+                      <Text className="font-semibold text-sm mb-1 capitalize">{key}</Text>
+                      <TextInput
+                        editable={false}
+                        multiline
+                        value={
+                          typeof value === 'string'
+                            ? value
+                            : JSON.stringify(value, null, 2)
+                        }
+                        className="border p-2 rounded bg-gray-100 text-gray-700"
+                      />
+                    </View>
+                  );
+                })}
+              <View className="flex-row justify-between mt-4">
                 <TouchableOpacity
                   className="bg-green-500 px-4 py-2 rounded"
                   onPress={confirmSubmit}
