@@ -10,39 +10,34 @@ import {
 import { Link, useRouter } from "expo-router";
 import axios from "axios";
 import HeroImage from "@/components/HeroImage";
-
 export default function Login() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
+  const [gmail, setGmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     try {
       setLoading(true);
-
-      if (!email.trim() || !password.trim()) {
+      if (!gmail.trim() || !password.trim()) {
         Alert.alert("Error", "Please enter both email and password");
+        setLoading(false);
         return;
       }
-
+      
       const { data } = await axios.post(
-        "http://192.168.0.183:8082/api/v1/auth/login",
-        { email, password } // Only send email and password, no name required
+        "http://192.168.0.183:8082/api/v1/auth/surveyorLogin",
+        {  gmail, password }
       );
-
-      Alert.alert("Success", data.message || "Login successful");
-      console.log("Login success for:", { email });
-
-      router.push("/SurveyorDashbroad"); // Correct route name
+      setLoading(false);
+      alert(data && data.message);
+      console.log("Login data ==>", { gmail, password });
+      router.push("/SurveyorDashboard");
     } catch (error) {
-      console.log("Login error:", error);
-
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || "Invalid email or password";
-        Alert.alert("Login Failed", message);
+        console.log("API error response:", error.response?.data);
+        Alert.alert("Error", "Invalid email or password");
       } else {
         Alert.alert("Error", "An unexpected error occurred");
       }
@@ -54,8 +49,7 @@ export default function Login() {
   return (
     <SafeAreaView className="flex-1 bg-black justify-between pt-12 pb-4">
       {/* Hero Image */}
-      <HeroImage />
-
+       <HeroImage/>
       {/* Login Form */}
       <View className="bg-purple-700 p-6 rounded-3xl shadow-lg mx-4 flex-1 justify-center">
         {/* Welcome Text */}
@@ -68,8 +62,8 @@ export default function Login() {
           placeholder="Email"
           placeholderTextColor="black"
           className="h-12 bg-white text-black px-4 rounded-full mb-4"
-          value={email}
-          onChangeText={setEmail}
+          value={gmail}
+          onChangeText={setGmail}
           keyboardType="email-address"
           autoCapitalize="none"
         />
@@ -102,6 +96,7 @@ export default function Login() {
             {loading ? "Logging in..." : "Login"}
           </Text>
         </TouchableOpacity>
+
       </View>
     </SafeAreaView>
   );

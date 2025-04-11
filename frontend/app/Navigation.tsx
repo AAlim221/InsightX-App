@@ -8,12 +8,12 @@ import Template2 from './Template2';
 import Template3 from './Template3';
 import Template4 from './Template4';
 import Template5 from './Template5';
-import Researcher from '@/app/Researcher';
+import ResearcherDashboard from "@/app/ResearcherDashboard"
 import SurveyorRegister from './SurveyorRegister';
 import SurveyorLogin from '@/app/SurveyorLogin';
 import SettingsMenu from "@/app/SettingsMenu";
 import ProfileMenu from "@/app/ProfileMenu";
-import InviteScreen from '@/app/InviteScreen';
+import InviteSelfServeyor from '@/app/InviteSelfServeyor';
 
 //import Drawer from '@/app/Drawer';
 
@@ -26,12 +26,12 @@ export type RootStackParamList = {
   Template3: undefined;
   Template4: undefined;
   Template5: undefined;
-  Researcher: undefined;
+  ResearcherDashboard: undefined;
   SettingsMenu: undefined;
   SurveyorRegister: undefined;
   SurveyorLogin: undefined;
   ProfileMenu: undefined;
-  InviteScreen: undefined;
+  InviteSelfServeyor: undefined;
 
 };
 
@@ -50,12 +50,12 @@ const AppNavigator = () => {
         <Stack.Screen name="Template3" component={Template3} />
         <Stack.Screen name="Template4" component={Template4} />
         <Stack.Screen name="Template5" component={Template5} />
-        <Stack.Screen name="Researcher" component={Researcher} />
+        <Stack.Screen name="ResearcherDashboard" component={ResearcherDashboard} />
         <Stack.Screen name="SurveyorRegister" component={SurveyorRegister} />
         <Stack.Screen name="SurveyorLogin" component={SurveyorLogin} />
         <Stack.Screen name="SettingsMenu" component={SettingsMenu} />
         <Stack.Screen name="ProfileMenu" component={ProfileMenu} />
-        <Stack.Screen name="InviteScreen" component={InviteScreen} />
+        <Stack.Screen name="InviteSelfServeyor" component={InviteSelfServeyor} />
 
       </Stack.Navigator>
     </NavigationContainer>

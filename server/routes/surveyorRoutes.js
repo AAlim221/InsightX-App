@@ -1,15 +1,15 @@
 const express = require('express');
-const { registerController, loginController } = require('../controllers/surveyorController')
+const { regController, logController } = require('../controllers/surveyorController')
 
 //router object
 const router = express.Router()
 
 //routes
 //Register post
-router.post('/register',registerController);
+router.post('/surveyorRegister',regController);
 
 //Login post
-router.post('/login',loginController);
+router.post('/surveyorLogin',logController);
 
 //export
 module.exports = router;

@@ -11,12 +11,12 @@ type RootStackParamList = {
   Template4: undefined;
   Template5: undefined;
   Template6: undefined;
-  Researcher:undefined;
-  InviteAddScreen:undefined;
+  SurveyorDashboard:undefined;
+  ResearcherDashboard:undefined;
 
 };
 
-type TemplatesSectionComNavigationProp = StackNavigationProp<RootStackParamList, 'Researcher'>;
+type TemplatesSectionComNavigationProp = StackNavigationProp<RootStackParamList, 'ResearcherDashboard'>;
 
 const TemplatesSectionCom = () => {
   // Get the navigation object from useNavigation inside the component
@@ -28,7 +28,7 @@ const TemplatesSectionCom = () => {
 
   // Define the handleViewAllPress function to navigate to Template5 screen
   const handleViewAllPress = () => {
-    navigation.navigate('InviteAddScreen');
+    navigation.navigate('ResearcherDashboard');
   };
 
   // Template data with names and background images
@@ -38,7 +38,7 @@ const TemplatesSectionCom = () => {
     { name: 'Template 3', screen: 'Template3', image: require('../assets/images/Temp3.png') },
     { name: 'Template 4', screen: 'Template4', image: require('../assets/images/Temp4.png') },
     { name: 'Template 5', screen: 'Template5', image: require('../assets/images/Temp5.png') },
-    { name: 'Template 6', screen: 'Researcher', image: require('../assets/images/Temp5.png') },
+    { name: 'Template 6', screen: 'SurveyorDashboard', image: require('../assets/images/Temp5.png') },
   ];
 
   return (
