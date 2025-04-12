@@ -3,50 +3,53 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import ProfileCom from '@/components/ProfileCom';
-import { Ionicons } from '@expo/vector-icons'; // Import Ionicons
 
 const SettingsMenu = (props: any) => {
   const navigation = useNavigation();
 
   const menuItems = [
-    { label: 'Profile', route: 'ProfileMenu' },
-    { label: 'Add Surveyor', route: 'SurveyorRegister' },
-    { label: 'Settings', route: 'Settings' },
-    { label: 'Notifications', route: 'Notifications' },
-    { label: 'Mail Support', route: 'MailSupport' },
-    { label: 'Call Support', route: 'CallSupport' },
-    { label: 'FAQ Videos', route: 'FAQVideos' },
-    { label: 'FAQ Questions', route: 'FAQQuestions' },
-    { label: 'Language', route: 'Language' },
-    { label: 'Privacy Policy', route: 'PrivacyPolicy' },
-    { label: 'Follow Us', route: 'FollowUs' },
-    { label: 'Delete Account', route: 'DeleteAccount' },
+    { label: 'Profile', icon: 'person-outline', route: 'Profile' },
+    { label: 'Add Surveyor', icon: 'person-add-outline', route: 'SurveyorRegister' },
+    { label: 'Settings', icon: 'settings-outline', route: 'Settings' },
+    { label: 'Notifications', icon: 'notifications-outline', route: 'Notifications' },
+    { label: 'Mail Support', icon: 'mail-outline', route: 'MailSupport' },
+    { label: 'Call Support', icon: 'call-outline', route: 'CallSupport' },
+    { label: 'FAQ Videos', icon: 'videocam-outline', route: 'FAQVideos' },
+    { label: 'FAQ Questions', icon: 'help-circle-outline', route: 'FAQQuestions' },
+    { label: 'Language', icon: 'language-outline', route: 'Language' },
+    { label: 'Privacy Policy', icon: 'document-text-outline', route: 'PrivacyPolicy' },
+    { label: 'Follow Us', icon: 'share-social-outline', route: 'FollowUs' },
+    { label: 'Delete Account', icon: 'trash-outline', route: 'DeleteAccount' },
   ];
 
   return (
-    <DrawerContentScrollView {...props}>
-      <SafeAreaView className="px-4 py-6 space-y-3 bg-purple-500 w-full">
-        {/* Profile Component at the top */}
-        <View className="flex-row justify-between items-center gap-4 mb-4">
-          {/* Back Button */}
+    <DrawerContentScrollView {...props} style={{ backgroundColor: '#A020F0' }}>
+      <SafeAreaView className="px-4 py-6 space-y-4 bg-purple-600 rounded-3xl">
+     <View className="px-4 py-6 space-y-4 bg-violet-500 rounded-3xl">
+        {/* Top Header with Back Button and Profile */}
+        <View className="flex-row justify-between items-center">
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="white" />
+            <Ionicons name="arrow-back" size={26} color="white" />
           </TouchableOpacity>
-          {/* User Profile Icon */}
           <ProfileCom />
         </View>
-        
-        {/* Menu Items */}
+        <Text className="text-white text-xl font-semibold mt-4">Settings Menu</Text>
+        </View>
+
+      <View className="px-4 mt-4 space-y-3">
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
-            className="bg-white p-4 rounded-xl shadow-sm mb-3"
+            className="bg-white p-4 rounded-2xl shadow shadow-purple-200 flex-row items-center gap-3 mb-4"
             onPress={() => navigation.navigate(item.route as never)}
           >
-            <Text className="text-base text-gray-800">{item.label}</Text>
+            <Ionicons name={item.icon as any} size={22} color="#6B21A8" />
+            <Text className="text-gray-800 text-base font-medium">{item.label}</Text>
           </TouchableOpacity>
         ))}
+      </View>
       </SafeAreaView>
     </DrawerContentScrollView>
   );

@@ -15,11 +15,17 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileCom from '@/components/ProfileCom';
 
-// Type definition for form structure
+// Types
 type FormType = {
   id?: string;
   title: string;
   [key: string]: any;
+};
+
+type UserType = {
+  name: string;
+  email: string;
+  _id: string;
 };
 
 const ResearcherDashboard = () => {
@@ -27,14 +33,12 @@ const ResearcherDashboard = () => {
   const [selectedForm, setSelectedForm] = useState<FormType | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<UserType | null>(null);
 
-  // Load forms on mount
   useEffect(() => {
     axios
       .get('http://192.168.0.183:8082/api/v1/auth/listAllForms')
-      .then((response) => {
-        setForms(response.data);
-      })
+      .then((response) => setForms(response.data))
       .catch((error) => {
         console.error('Error loading forms:', error);
         Alert.alert('Error', 'Failed to load forms from the server.');
@@ -79,42 +83,50 @@ const ResearcherDashboard = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      {/* Header */}
-      <View className="bg-purple-500 flex-row items-center justify-between px-4 py-2">
+    <SafeAreaView className="flex-1 bg-purple-900">
+      {/* Top Nav */}
+      <View className="bg-gradient-to-r from-purple-600 to-indigo-600 flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity onPress={() => router.push('/HomeScreen')}>
-          <Ionicons name="arrow-back" size={28} color="black" />
+          <Ionicons name="arrow-back" size={28} color="white" />
         </TouchableOpacity>
         <ProfileCom />
       </View>
 
-      {/* Researcher Info */}
-      <View className="bg-purple-500">
-        <View className="bg-white py-4 mb-4">
-          <Text className="text-center text-black font-semibold text-lg">Researcher Name</Text>
+      {/* User Info */}
+      <View className="bg-purple-700 py-4 px-6">
+        <View className="bg-white rounded-xl mb-4 py-4 shadow-md">
+          <Text className="text-center text-black font-semibold text-lg">
+            👩‍🔬 Researcher Name: {user?.name || 'N/A'}
+          </Text>
         </View>
-        <View className="bg-white py-4 mb-4">
-          <Text className="text-center text-black font-semibold text-lg">Researcher ID</Text>
+        <View className="bg-white rounded-xl mb-4 py-4 shadow-md">
+          <Text className="text-center text-black font-semibold text-lg">
+            🆔 Researcher ID: {user?._id || 'N/A'}
+          </Text>
         </View>
-        <TouchableOpacity className="bg-white py-4 mb-4">
-          <Text className="text-center text-black font-semibold text-lg">Researcher All Template here...</Text>
+        <TouchableOpacity className="bg-white rounded-xl py-4 shadow-md">
+          <Text className="text-center text-black font-semibold text-lg">📂 View All Templates</Text>
         </TouchableOpacity>
       </View>
 
       {/* Forms List */}
-      <ScrollView className="bg-purple-500 px-4 flex-1">
+      <ScrollView className="bg-purple-700 px-4 flex-1">
         {loading ? (
-          <ActivityIndicator size="large" color="#fff" className="my-8" />
+          <View className="flex-1 justify-center items-center my-8">
+            <ActivityIndicator size="large" color="#fff" />
+            <Text className="text-white mt-4">Loading forms...</Text>
+          </View>
         ) : forms.length === 0 ? (
           <Text className="text-white text-center mt-4">No forms available.</Text>
         ) : (
           forms.map((form: FormType, index: number) => (
             <TouchableOpacity
               key={form._id || index}
-              className="bg-white h-24 my-2 rounded-lg justify-center items-center"
+              className="bg-white h-28 my-3 rounded-2xl px-4 py-3 shadow-md flex-row items-center"
               onPress={() => handleBoxPress(form)}
             >
-              <Text className="text-black font-semibold text-base">
+              <Ionicons name="document-text-outline" size={28} color="#6D28D9" />
+              <Text className="text-black font-semibold text-base ml-4">
                 {form.title || `Form ${index + 1}`}
               </Text>
             </TouchableOpacity>
@@ -122,46 +134,82 @@ const ResearcherDashboard = () => {
         )}
       </ScrollView>
 
-      {/* Modal for form view */}
+      {/* Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent={true}>
-        <View className="flex-1 justify-center bg-black bg-opacity-70 px-4">
-          <View className="bg-white p-4 rounded-lg max-h-[90%]">
-            <Text className="text-lg font-bold mb-2 text-center">
-              {selectedForm?.title || 'Form Details'}
-            </Text>
-            <ScrollView>
-              {selectedForm &&
-                Object.entries(selectedForm).map(([key, value], index) => {
-                  if (['_id', '__v', 'createdAt', 'updatedAt'].includes(key)) return null;
+        <View className="flex-1 justify-center bg-purple-950 bg-opacity-70 px-4">
+          <View className="bg-white p-4 rounded-2xl max-h-[90%] shadow-lg">
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {/* Title */}
+              <Text className="text-xl font-bold text-purple-700 text-center mb-4">
+                {selectedForm?.title || 'Form Details'}
+              </Text>
 
-                  return (
-                    <View key={index} className="mb-3">
-                      <Text className="font-semibold text-sm mb-1 capitalize">{key}</Text>
-                      <TextInput
-                        editable={false}
-                        multiline
-                        value={
-                          typeof value === 'string'
-                            ? value
-                            : JSON.stringify(value, null, 2)
-                        }
-                        className="border p-2 rounded bg-gray-100 text-gray-700"
-                      />
+              {/* People Info */}
+              <View className="mb-6">
+                <Text className="text-lg font-semibold text-gray-800 mb-2">👥 People Information</Text>
+                {selectedForm?.peopleDetails &&
+                  Object.entries(selectedForm.peopleDetails).map(([key, value], idx) => (
+                    <View key={idx} className="mb-2">
+                      <Text className="text-sm font-medium text-gray-700 capitalize">{key}</Text>
+                      <Text className="bg-gray-100 p-2 rounded-md text-gray-900 text-sm">
+                        {String(value)}
+                      </Text>
                     </View>
-                  );
-                })}
-              <View className="flex-row justify-between mt-4">
+                  ))}
+              </View>
+
+              {/* Questions */}
+              <View>
+                <Text className="text-lg font-semibold text-gray-800 mb-2">❓ Questions</Text>
+                {selectedForm?.questions &&
+                  selectedForm.questions.map((question: any, index: number) => (
+                    <View
+                      key={index}
+                      className="mb-4 bg-gray-50 p-4 rounded-xl border border-gray-200"
+                    >
+                      <Text className="text-sm font-semibold mb-2 text-purple-700">
+                        Question {index + 1}: {question.label}
+                      </Text>
+
+                      {/* Render type-specific UI */}
+                      {['multiple-choice', 'checkboxes'].includes(question.type) &&
+                        question.options?.map((opt: string, i: number) => (
+                          <View key={i} className="flex-row items-center mb-1">
+                            <View className="h-4 w-4 mr-2 rounded-full border border-gray-400 bg-white" />
+                            <Text className="text-sm text-gray-800">{opt}</Text>
+                          </View>
+                        ))}
+
+                      {question.type === 'short-answer' && (
+                        <TextInput
+                          placeholder="Short answer text"
+                          editable={false}
+                          className="border mt-2 border-gray-300 p-2 rounded bg-white text-sm text-gray-700"
+                        />
+                      )}
+
+                      {question.type === 'linear-scale' && (
+                        <Text className="text-sm text-gray-600 italic mt-1">
+                          Scale: {question.minValue} to {question.maxValue}
+                        </Text>
+                      )}
+                    </View>
+                  ))}
+              </View>
+
+              {/* Modal Buttons */}
+              <View className="flex-row justify-between mt-6">
                 <TouchableOpacity
-                  className="bg-green-500 px-4 py-2 rounded"
+                  className="flex-1 mr-2 bg-green-600 py-3 rounded-lg shadow"
                   onPress={confirmSubmit}
                 >
-                  <Text className="text-white font-bold">Submit</Text>
+                  <Text className="text-center text-white font-bold">Submit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  className="bg-red-500 px-4 py-2 rounded"
+                  className="flex-1 ml-2 bg-red-500 py-3 rounded-lg shadow"
                   onPress={() => setModalVisible(false)}
                 >
-                  <Text className="text-white font-bold">Close</Text>
+                  <Text className="text-center text-white font-bold">Close</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>
@@ -169,13 +217,13 @@ const ResearcherDashboard = () => {
         </View>
       </Modal>
 
-      {/* Bottom Navigation */}
-      <View className="flex-row bg-purple-900 py-4 justify-between px-8">
+      {/* Bottom Nav */}
+      <View className="flex-row bg-purple-800 py-4 justify-around px-8 shadow-inner">
         <TouchableOpacity onPress={() => router.push('/HomeScreen')}>
-          <Ionicons name="home" size={30} color="black" />
+          <Ionicons name="home" size={30} color="white" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => router.push('/SettingsMenu')}>
-          <Ionicons name="menu" size={30} color="black" />
+          <Ionicons name="menu" size={30} color="white" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
