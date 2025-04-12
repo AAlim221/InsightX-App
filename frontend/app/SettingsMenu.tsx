@@ -12,7 +12,8 @@ const SettingsMenu = (props: any) => {
   const menuItems = [
     { label: 'Profile', icon: 'person-outline', route: 'Profile' },
     { label: 'Add Surveyor', icon: 'person-add-outline', route: 'SurveyorRegister' },
-    { label: 'Settings', icon: 'settings-outline', route: 'Settings' },
+    { label: 'Surveyor Dashboard', icon: 'speedometer-outline', route: 'SurveyorDashboard' },
+    { label: 'Researcher Dashboard', icon: 'analytics-outline', route: 'ResearcherDashboard' },
     { label: 'Notifications', icon: 'notifications-outline', route: 'Notifications' },
     { label: 'Mail Support', icon: 'mail-outline', route: 'MailSupport' },
     { label: 'Call Support', icon: 'call-outline', route: 'CallSupport' },
@@ -27,29 +28,29 @@ const SettingsMenu = (props: any) => {
   return (
     <DrawerContentScrollView {...props} style={{ backgroundColor: '#A020F0' }}>
       <SafeAreaView className="px-4 py-6 space-y-4 bg-purple-600 rounded-3xl">
-     <View className="px-4 py-6 space-y-4 bg-violet-500 rounded-3xl">
-        {/* Top Header with Back Button and Profile */}
-        <View className="flex-row justify-between items-center">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={26} color="white" />
-          </TouchableOpacity>
-          <ProfileCom />
-        </View>
-        <Text className="text-white text-xl font-semibold mt-4">Settings Menu</Text>
+        <View className="px-4 py-6 space-y-4 bg-violet-500 rounded-3xl">
+          {/* Top Header with Back Button and Profile */}
+          <View className="flex-row justify-between items-center">
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons name="arrow-back" size={26} color="white" />
+            </TouchableOpacity>
+            <ProfileCom />
+          </View>
+          <Text className="text-white text-xl font-semibold mt-4">Settings Menu</Text>
         </View>
 
-      <View className="px-4 mt-4 space-y-3">
-        {menuItems.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            className="bg-white p-4 rounded-2xl shadow shadow-purple-200 flex-row items-center gap-3 mb-4"
-            onPress={() => navigation.navigate(item.route as never)}
-          >
-            <Ionicons name={item.icon as any} size={22} color="#6B21A8" />
-            <Text className="text-gray-800 text-base font-medium">{item.label}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+        <View className="px-4 mt-4 space-y-3">
+          {menuItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              className="bg-white p-4 rounded-2xl shadow shadow-purple-200 flex-row items-center gap-3 mb-4"
+              onPress={() => navigation.navigate(item.route as never)}
+            >
+              <Ionicons name={item.icon as any} size={22} color="#6B21A8" />
+              <Text className="text-gray-800 text-base font-medium">{item.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </SafeAreaView>
     </DrawerContentScrollView>
   );

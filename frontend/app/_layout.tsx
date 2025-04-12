@@ -21,11 +21,11 @@ export default function RootLayout() {
         <Stack.Screen name="Template4" options={{ headerShown: false }} />
         <Stack.Screen name="Template5" options={{ headerShown: false }} />
         <Stack.Screen name="ResearcherDashboard" options={{ headerShown: false }} />
+        <Stack.Screen name="SurveyorDashboard" options={{ headerShown: false }} />
         <Stack.Screen name="SurveyorRegister" options={{ headerShown: false }} />
         <Stack.Screen name="SettingsMenu"options={{ headerShown: false }} />
         <Stack.Screen name="ProfileMenu"options={{ headerShown: false }} />
         <Stack.Screen name="SurveyorLogin" options={{ headerShown: false }} />
-        <Stack.Screen name="SurveyorDashBoard" options={{ headerShown: false }} />
         <Stack.Screen name="InviteSelfServeyor" options={{ headerShown: false }} />
         <Stack.Screen name="Profile" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />

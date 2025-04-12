@@ -15,11 +15,11 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileCom from '@/components/ProfileCom';
 
-// Types
 type FormType = {
-  id?: string;
+  _id?: string;
   title: string;
-  [key: string]: any;
+  peopleDetails?: { [key: string]: string };
+  questions?: any[];
 };
 
 type UserType = {
@@ -53,14 +53,11 @@ const ResearcherDashboard = () => {
 
   const handleSubmit = async () => {
     if (!selectedForm) return;
-
     try {
       const response = await axios.post(
         'http://192.168.0.183:8082/api/v1/auth/createForm',
         selectedForm,
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
       if (response.status === 200 || response.status === 201) {
@@ -139,7 +136,6 @@ const ResearcherDashboard = () => {
         <View className="flex-1 justify-center bg-purple-950 bg-opacity-70 px-4">
           <View className="bg-white p-4 rounded-2xl max-h-[90%] shadow-lg">
             <ScrollView showsVerticalScrollIndicator={false}>
-              {/* Title */}
               <Text className="text-xl font-bold text-purple-700 text-center mb-4">
                 {selectedForm?.title || 'Form Details'}
               </Text>
@@ -161,40 +157,94 @@ const ResearcherDashboard = () => {
               {/* Questions */}
               <View>
                 <Text className="text-lg font-semibold text-gray-800 mb-2">❓ Questions</Text>
-                {selectedForm?.questions &&
-                  selectedForm.questions.map((question: any, index: number) => (
-                    <View
-                      key={index}
-                      className="mb-4 bg-gray-50 p-4 rounded-xl border border-gray-200"
-                    >
-                      <Text className="text-sm font-semibold mb-2 text-purple-700">
-                        Question {index + 1}: {question.label}
+                {selectedForm?.questions?.map((question: any, index: number) => (
+                  <View
+                    key={index}
+                    className="mb-5 p-4 bg-white rounded-xl shadow border border-gray-200"
+                  >
+                    <Text className="text-base font-bold text-purple-700 mb-2">
+                      {index + 1}. {question.label}
+                    </Text>
+
+                    {question.type === 'short-answer' && (
+                      <TextInput
+                        placeholder="Short answer"
+                        editable={false}
+                        className="border border-gray-300 p-2 rounded bg-gray-50 text-sm"
+                      />
+                    )}
+
+                    {question.type === 'paragraph' && (
+                      <TextInput
+                        placeholder="Long answer"
+                        editable={false}
+                        multiline
+                        numberOfLines={4}
+                        className="border border-gray-300 p-2 rounded bg-gray-50 text-sm"
+                      />
+                    )}
+
+                    {question.type === 'multiple-choice' &&
+                      question.options?.map((opt: string, i: number) => (
+                        <View key={i} className="flex-row items-center mb-2">
+                          <View className="h-4 w-4 rounded-full border border-gray-500 mr-2 bg-white" />
+                          <Text className="text-sm text-gray-800">{opt}</Text>
+                        </View>
+                      ))}
+
+                    {question.type === 'checkboxes' &&
+                      question.options?.map((opt: string, i: number) => (
+                        <View key={i} className="flex-row items-center mb-2">
+                          <View className="h-4 w-4 rounded border border-gray-500 mr-2 bg-white" />
+                          <Text className="text-sm text-gray-800">{opt}</Text>
+                        </View>
+                      ))}
+
+                    {question.type === 'linear-scale' && (
+                      <Text className="text-sm italic text-gray-600">
+                        Scale: {question.minValue} to {question.maxValue}
                       </Text>
+                    )}
 
-                      {/* Render type-specific UI */}
-                      {['multiple-choice', 'checkboxes'].includes(question.type) &&
-                        question.options?.map((opt: string, i: number) => (
-                          <View key={i} className="flex-row items-center mb-1">
-                            <View className="h-4 w-4 mr-2 rounded-full border border-gray-400 bg-white" />
-                            <Text className="text-sm text-gray-800">{opt}</Text>
-                          </View>
+                    {question.type === 'rating' && (
+                      <View className="flex-row mt-2">
+                        {Array.from({ length: question.scale || 5 }, (_, i) => (
+                          <Ionicons key={i} name="star-outline" size={22} color="#facc15" />
                         ))}
+                      </View>
+                    )}
 
-                      {question.type === 'short-answer' && (
-                        <TextInput
-                          placeholder="Short answer text"
-                          editable={false}
-                          className="border mt-2 border-gray-300 p-2 rounded bg-white text-sm text-gray-700"
-                        />
-                      )}
+                    {question.type === 'grid-multiple-choice' &&
+                      question.rows?.map((row: string, rIdx: number) => (
+                        <View key={rIdx} className="mb-2">
+                          <Text className="text-sm font-medium text-gray-700 mb-1">{row}</Text>
+                          <View className="flex-row flex-wrap gap-2">
+                            {question.columns?.map((col: string, cIdx: number) => (
+                              <View key={cIdx} className="flex-row items-center">
+                                <View className="h-4 w-4 rounded-full border border-gray-500 mr-1 bg-white" />
+                                <Text className="text-sm text-gray-700">{col}</Text>
+                              </View>
+                            ))}
+                          </View>
+                        </View>
+                      ))}
 
-                      {question.type === 'linear-scale' && (
-                        <Text className="text-sm text-gray-600 italic mt-1">
-                          Scale: {question.minValue} to {question.maxValue}
-                        </Text>
-                      )}
-                    </View>
-                  ))}
+                    {question.type === 'grid-multiple-checkbox' &&
+                      question.rows?.map((row: string, rIdx: number) => (
+                        <View key={rIdx} className="mb-2">
+                          <Text className="text-sm font-medium text-gray-700 mb-1">{row}</Text>
+                          <View className="flex-row flex-wrap gap-2">
+                            {question.columns?.map((col: string, cIdx: number) => (
+                              <View key={cIdx} className="flex-row items-center">
+                                <View className="h-4 w-4 rounded border border-gray-500 mr-1 bg-white" />
+                                <Text className="text-sm text-gray-700">{col}</Text>
+                              </View>
+                            ))}
+                          </View>
+                        </View>
+                      ))}
+                  </View>
+                ))}
               </View>
 
               {/* Modal Buttons */}

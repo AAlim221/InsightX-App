@@ -1,15 +1,23 @@
 const express = require('express');
-const { regController, logController } = require('../controllers/surveyorController')
+const {
+  regController,
+  logController,
+  getSurveyorsController,
+  getSurveyorByIdController
+} = require('../controllers/surveyorController');
 
-//router object
-const router = express.Router()
+const router = express.Router();
 
-//routes
-//Register post
-router.post('/surveyorRegister',regController);
+// Register route
+router.post('/surveyorRegister', regController);
 
-//Login post
-router.post('/surveyorLogin',logController);
+// Login route
+router.post('/surveyorLogin', logController);
 
-//export
+// Get all surveyors
+router.get('/surveyors', getSurveyorsController);
+
+// Get one surveyor by ID
+router.get('/surveyors/:id', getSurveyorByIdController);
+
 module.exports = router;
