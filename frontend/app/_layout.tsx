@@ -28,6 +28,7 @@ export default function RootLayout() {
         <Stack.Screen name="SurveyorLogin" options={{ headerShown: false }} />
         <Stack.Screen name="InviteSelfServeyor" options={{ headerShown: false }} />
         <Stack.Screen name="Profile" options={{ headerShown: false }} />
+        <Stack.Screen name="Response" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

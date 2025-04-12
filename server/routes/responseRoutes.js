@@ -1,12 +1,19 @@
 const express = require("express");
-const { submitResponse, getResponsesByFormId } = require("../controllers/responseController");
-
-//router object
 const router = express.Router();
 
-//routes
-router.post("/submitResponse", submitResponse);
+const {
+  submitResponse,
+  getResponsesByFormId,
+  getSingleResponse,
+} = require("../controllers/responseController");
 
+// POST: Submit a response
+router.post("/submit", submitResponse);
+
+// GET: All responses for a form
 router.get("/form/:formId", getResponsesByFormId);
+
+// GET: One specific response
+router.get("/:responseId", getSingleResponse);
 
 module.exports = router;

@@ -28,7 +28,7 @@ type UserType = {
   _id: string;
 };
 
-const ResearcherDashboard = () => {
+const Response = () => {
   const [forms, setForms] = useState<FormType[]>([]);
   const [selectedForm, setSelectedForm] = useState<FormType | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -56,7 +56,7 @@ const ResearcherDashboard = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.183:8082/api/v1/auth/createForm",
+        "http://192.168.0.183:8082/api/v1/auth/submit",
         selectedForm,
         {
           headers: { "Content-Type": "application/json" },
@@ -256,4 +256,4 @@ const ResearcherDashboard = () => {
   );
 };
 
-export default ResearcherDashboard;
+export default Response;

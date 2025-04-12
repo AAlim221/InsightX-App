@@ -1,51 +1,45 @@
 const Response = require("../models/responseModel");
 
-// Submit a response
+// Submit response
 const submitResponse = async (req, res) => {
   try {
-    const { formId, peopleDetails, answers } = req.body;
+    const { formId, respondentDetails, answers } = req.body;
 
-    if (!formId || !peopleDetails || !answers) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
-
-    // Ensure each answer includes a valid questionId and an answer
-    answers.forEach(answer => {
-      if (!answer.questionId || answer.answer === undefined) {
-        throw new Error("Each answer must have a questionId and an answer");
-      }
-    });
-
-    // Create a new response using the provided formId, peopleDetails, and answers
-    const newResponse = new Response({ formId, peopleDetails, answers });
-
-    // Save the new response to the database
+    const newResponse = new Response({ formId, respondentDetails, answers });
     await newResponse.save();
 
-    res.status(201).json({ message: "Response submitted successfully", response: newResponse });
+    res.status(201).json({ message: "Response submitted successfully." });
   } catch (error) {
-    console.error("Error in submitResponse:", error);
-    res.status(500).json({ error: "Error submitting response" });
+    res.status(500).json({ message: "Failed to submit response", error });
   }
 };
 
-// Fetch responses for a form
+// Get responses by formId
 const getResponsesByFormId = async (req, res) => {
   try {
     const { formId } = req.params;
-
-    if (!formId) {
-      return res.status(400).json({ error: "formId parameter is required" });
-    }
-
-    // Find all responses that match the formId
-    const responses = await Response.find({ formId }).populate("answers.questionId");
-
+    const responses = await Response.find({ formId });
     res.status(200).json(responses);
   } catch (error) {
-    console.error("Error in getResponsesByFormId:", error);
-    res.status(500).json({ error: "Error fetching responses" });
+    res.status(500).json({ message: "Failed to fetch responses", error });
   }
 };
 
-module.exports = { submitResponse, getResponsesByFormId };
+// Get a single response
+const getSingleResponse = async (req, res) => {
+  try {
+    const { responseId } = req.params;
+    const response = await Response.findById(responseId);
+    if (!response) return res.status(404).json({ message: "Not found" });
+
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving response", error });
+  }
+};
+
+module.exports = {
+  submitResponse,
+  getResponsesByFormId,
+  getSingleResponse,
+};

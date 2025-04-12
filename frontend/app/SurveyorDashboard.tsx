@@ -32,6 +32,7 @@ const SurveyorDashboard = () => {
   const [selectedForm, setSelectedForm] = useState<SurveyorForm | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
+  // 🔄 Fetch surveyor data
   useEffect(() => {
     axios
       .get("http://192.168.0.183:8082/api/v1/auth/surveyors")
@@ -55,7 +56,7 @@ const SurveyorDashboard = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
+      {/* 🔹 Header */}
       <View className="bg-purple-600 flex-row items-center justify-between px-4 py-3 shadow">
         <TouchableOpacity onPress={() => router.push("/HomeScreen")}>
           <Ionicons name="arrow-back" size={26} color="white" />
@@ -64,13 +65,13 @@ const SurveyorDashboard = () => {
         <ProfileCom />
       </View>
 
-      {/* Surveyor Info */}
+      {/* 🔹 Researcher Info */}
       <View className="bg-purple-100 rounded-xl py-3 px-4 m-4 shadow">
-        <Text className="text-purple-900 font-bold text-lg">👨 Researcher Name</Text>
+        <Text className="text-purple-900 font-bold text-lg">👨 Researcher Name: Alim</Text>
         <Text className="text-purple-700">ID: 123456</Text>
       </View>
 
-      {/* Forms List */}
+      {/* 🔹 Surveyor Form List */}
       <ScrollView className="px-4 flex-1">
         {loading ? (
           <View className="justify-center items-center py-10">
@@ -80,7 +81,7 @@ const SurveyorDashboard = () => {
         ) : forms.length === 0 ? (
           <Text className="text-center text-gray-600 mt-10">No templates found.</Text>
         ) : (
-          forms.map((form: SurveyorForm, index: number) => (
+          forms.map((form, index) => (
             <View
               key={index}
               className="bg-white border border-purple-300 p-4 rounded-xl my-2 shadow-sm"
@@ -100,11 +101,11 @@ const SurveyorDashboard = () => {
         )}
       </ScrollView>
 
-      {/* Modal */}
+      {/* 🔹 Modal: Surveyor Details */}
       <Modal visible={isModalVisible} transparent animationType="slide">
         <View className="flex-1 justify-center items-center bg-black bg-opacity-60 px-4">
           <View className="bg-white w-full p-0 rounded-2xl max-h-[85%] overflow-hidden">
-            {/* Modal Header */}
+            {/* Header */}
             <View className="bg-gradient-to-r from-purple-600 to-purple-400 px-6 py-4 flex-row justify-between items-center">
               <Text className="text-white text-lg font-bold">📋 Surveyor Details</Text>
               <TouchableOpacity onPress={closeModal}>
@@ -112,15 +113,14 @@ const SurveyorDashboard = () => {
               </TouchableOpacity>
             </View>
 
-            {/* Form Data */}
+            {/* Details */}
             <ScrollView className="p-5 space-y-4">
               {selectedForm &&
-                Object.entries(selectedForm as Record<string, any>).map(([key, value], idx) => {
+                Object.entries(selectedForm).map(([key, value], idx) => {
                   const formattedKey = key
                     .replace(/([A-Z])/g, " $1")
                     .replace(/_/g, " ")
                     .toUpperCase();
-
                   const iconMap: Record<string, string> = {
                     name: "👤",
                     gmail: "📧",
@@ -130,7 +130,6 @@ const SurveyorDashboard = () => {
                     formName: "📄",
                     _id: "🆔",
                   };
-
                   const icon = iconMap[key] || "🔸";
 
                   return (
@@ -162,7 +161,7 @@ const SurveyorDashboard = () => {
         </View>
       </Modal>
 
-      {/* Bottom Navigation */}
+      {/* 🔹 Bottom Navigation */}
       <View className="flex-row bg-purple-600 py-3 justify-between px-8">
         <TouchableOpacity onPress={() => router.push("/HomeScreen")}>
           <Ionicons name="home" size={28} color="white" />

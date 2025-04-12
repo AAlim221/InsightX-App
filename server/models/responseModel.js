@@ -1,37 +1,30 @@
 const mongoose = require("mongoose");
 
-// Define the schema for response to the form
-const ResponseSchema = new mongoose.Schema({
-  formId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: "formsModel", // Refers to the form this response is associated with
-    required: true 
-  },
-  peopleDetails: {
-    name: { type: String, required: true },
-    age: { type: Number, required: true },
-    nid: { type: String, required: true },
-    mobile: { type: String, required: true },
-    division: { type: String, required: true },
-    district: { type: String, required: true }
-  },
-  answers: [
-    {
-      questionId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "formsModel.questions", // Links to the specific question in the form
-        required: true
-      },
-      answer: { 
-        type: mongoose.Schema.Types.Mixed, 
-        required: true, 
-      }
-    }
-  ],
-  submittedAt: { 
-    type: Date, 
-    default: Date.now 
-  } // Submission timestamp
+const answerSchema = new mongoose.Schema({
+  question: { type: String, required: true },
+  type: { type: String, required: true },
+  response: mongoose.Schema.Types.Mixed,
 });
 
-module.exports = mongoose.model("Response", ResponseSchema);
+const responseSchema = new mongoose.Schema(
+  {
+    formId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Form",
+      required: true,
+    },
+    respondentDetails: {
+      name: String,
+      age: String,
+      nid: String,
+      mobile: String,
+      division: String,
+      district: String,
+      thana: String,
+    },
+    answers: [answerSchema],
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Response", responseSchema);
