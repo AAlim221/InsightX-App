@@ -1,35 +1,35 @@
-const express = require('express')
-const cors = require('cors')
-const dotenv = require('dotenv')
-const colors = require('colors')
-const morgan = require('morgan')
+// ===========================
+// File: server.js
+// ===========================
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const colors = require('colors');
+const morgan = require('morgan');
 
+// Load environment variables
+dotenv.config();
 
-//DOTENV
-dotenv.config()
-
-const connectDB = require('./config/db')
-//MONGODB CONNECTION
+// MongoDB connection
+const connectDB = require('./config/db');
 connectDB();
 
-//REST OBJECT
-const app = express()
+// Express app
+const app = express();
 
-//middlewares
-app.use(cors())
-app.use(express.json())
-app.use(morgan('dev'))
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(morgan('dev'));
 
-//ROUTES
-app.use('/api/v1/auth',require("./routes/userRoutes"));
-app.use('/api/v1/auth',require("./routes/formRoutes"));
-app.use("/api/v1/auth", require("./routes/responseRoutes")); 
-app.use("/api/v1/auth", require("./routes/surveyorRoutes")); 
+// Routes
+app.use('/api/v1/auth', require('./routes/userRoutes'));
+app.use('/api/v1/auth', require('./routes/formRoutes'));
+app.use('/api/v1/auth', require('./routes/responseRoutes'));
+app.use('/api/v1/auth', require('./routes/surveyorRoutes'));
 
-//PORT
-const PORT = process.env.PORT || 8082
-
-//listen
-app.listen(PORT,() => {
-    console.log(`Server Running ${PORT}`.bgGreen.white)
+// Start server
+const PORT = process.env.PORT || 8082;
+app.listen(PORT, () => {
+  console.log(`Server Running on port ${PORT}`.bgGreen.white);
 });

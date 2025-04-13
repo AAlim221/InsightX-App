@@ -1,3 +1,7 @@
+// =======================
+// File: controllers/responseController.js
+// =======================
+
 const Response = require("../models/responseModel");
 
 // Submit response
@@ -5,12 +9,22 @@ const submitResponse = async (req, res) => {
   try {
     const { formId, respondentDetails, answers } = req.body;
 
-    const newResponse = new Response({ formId, respondentDetails, answers });
-    await newResponse.save();
+    if (!formId || !answers) {
+      return res.status(400).json({ message: "Form ID and answers are required." });
+    }
 
+    const newResponse = new Response({
+      formId,
+      respondentDetails,
+      answers,
+      submittedAt: new Date(),
+    });
+
+    await newResponse.save();
     res.status(201).json({ message: "Response submitted successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Failed to submit response", error });
+    console.error("Submit error:", error);
+    res.status(500).json({ message: "Failed to submit response" });
   }
 };
 
@@ -43,3 +57,4 @@ module.exports = {
   getResponsesByFormId,
   getSingleResponse,
 };
+

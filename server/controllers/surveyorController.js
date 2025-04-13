@@ -1,3 +1,7 @@
+
+// ===========================
+// File: controllers/surveyorController.js
+// ===========================
 const JWT = require('jsonwebtoken');
 const { hashPassword, comparePassword } = require('../helpers/authHelper');
 const surveyorModel = require('../models/surveyorModel');
@@ -58,15 +62,18 @@ const logController = async (req, res) => {
   }
 };
 
-// Get All Surveyors
 const getSurveyorsController = async (req, res) => {
   try {
+    console.log("Fetching all surveyors...");
     const surveyors = await surveyorModel.find().select("-password -confirmPassword");
+    console.log("Surveyors found:", surveyors.length);
     res.status(200).json({ success: true, message: "Fetched all surveyors", data: surveyors });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Fetch failed", error });
+    console.error("Fetch Surveyor Error:", error);
+    res.status(500).json({ success: false, message: "Fetch failed", error: error.message });
   }
 };
+
 
 // Get One Surveyor
 const getSurveyorByIdController = async (req, res) => {

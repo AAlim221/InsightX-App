@@ -1,8 +1,25 @@
+// =======================
+// File: models/responseModel.js
+// =======================
+
 const mongoose = require("mongoose");
 
 const answerSchema = new mongoose.Schema({
   question: { type: String, required: true },
-  type: { type: String, required: true },
+  type: {
+    type: String,
+    required: true,
+    enum: [
+      "short-answer",
+      "paragraph",
+      "multiple-choice",
+      "checkboxes",
+      "linear-scale",
+      "rating",
+      "multiple-choice-grid",
+      "checkbox-grid",
+    ],
+  },
   response: mongoose.Schema.Types.Mixed,
 });
 
@@ -14,7 +31,7 @@ const responseSchema = new mongoose.Schema(
       required: true,
     },
     respondentDetails: {
-      name: String,
+      name: { type: String, trim: true },
       age: String,
       nid: String,
       mobile: String,
@@ -23,8 +40,16 @@ const responseSchema = new mongoose.Schema(
       thana: String,
     },
     answers: [answerSchema],
+    reviewStatus: {
+      type: String,
+      enum: ["pending", "reviewed", "flagged"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
+
+responseSchema.index({ formId: 1 });
+responseSchema.index({ "respondentDetails.mobile": 1 });
 
 module.exports = mongoose.model("Response", responseSchema);

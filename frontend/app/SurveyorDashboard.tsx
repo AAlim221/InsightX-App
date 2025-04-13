@@ -67,7 +67,7 @@ const SurveyorDashboard = () => {
 
       {/* 🔹 Researcher Info */}
       <View className="bg-purple-100 rounded-xl py-3 px-4 m-4 shadow">
-        <Text className="text-purple-900 font-bold text-lg">👨 Researcher Name: Alim</Text>
+        <Text className="text-purple-900 font-bold text-lg">👨 surveyor Name: Alim</Text>
         <Text className="text-purple-700">ID: 123456</Text>
       </View>
 

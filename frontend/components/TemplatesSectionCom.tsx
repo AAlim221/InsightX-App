@@ -12,11 +12,11 @@ type RootStackParamList = {
   Template5: undefined;
   Template6: undefined;
   SurveyorDashboard:undefined;
-  Response:undefined;
+  ResponseQuestion:undefined;
 
 };
 
-type TemplatesSectionComNavigationProp = StackNavigationProp<RootStackParamList, 'Response'>;
+type TemplatesSectionComNavigationProp = StackNavigationProp<RootStackParamList, 'ResponseQuestion'>;
 
 const TemplatesSectionCom = () => {
   // Get the navigation object from useNavigation inside the component
@@ -28,7 +28,7 @@ const TemplatesSectionCom = () => {
 
   // Define the handleViewAllPress function to navigate to Template5 screen
   const handleViewAllPress = () => {
-    navigation.navigate('Response');
+    navigation.navigate('ResponseQuestion');
   };
 
   // Template data with names and background images

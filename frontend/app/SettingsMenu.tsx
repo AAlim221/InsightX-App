@@ -14,6 +14,7 @@ const SettingsMenu = (props: any) => {
     { label: 'Add Surveyor', icon: 'person-add-outline', route: 'SurveyorRegister' },
     { label: 'Surveyor Dashboard', icon: 'speedometer-outline', route: 'SurveyorDashboard' },
     { label: 'Researcher Dashboard', icon: 'analytics-outline', route: 'ResearcherDashboard' },
+    { label: 'Response Questions', icon: 'clipboard-outline', route: 'ResponseQuestion' }, // ✅ Added
     { label: 'Notifications', icon: 'notifications-outline', route: 'Notifications' },
     { label: 'Mail Support', icon: 'mail-outline', route: 'MailSupport' },
     { label: 'Call Support', icon: 'call-outline', route: 'CallSupport' },
