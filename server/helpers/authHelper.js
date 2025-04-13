@@ -1,23 +1,15 @@
-const bcrypt = require('bcryptjs');
+// ===========================
+// 📁 helpers/authHelper.js
+// ===========================
+const bcrypt = require('bcrypt');
 
-//Hash function
-exports.hashPassword = (password) => {
-  return new Promise((resolve, reject) => {
-    bcrypt.genSalt(10, (err, salt) => {
-      if (err) {
-        reject(err);
-      }
-      bcrypt.hash(password, salt, (err, hash) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(hash);
-      });
-    });
-  });
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
 };
 
-//Compare or Decrypt password
-exports.comparePassword = (password,hashed)=>{
-    return bcrypt.compare(password,hashed);
+const comparePassword = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
 };
+
+module.exports = { hashPassword, comparePassword };

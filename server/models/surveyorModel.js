@@ -1,5 +1,5 @@
 // ===========================
-// File: models/surveyorModel.js
+// 📁 models/surveyorModel.js
 // ===========================
 const mongoose = require('mongoose');
 
@@ -8,6 +8,7 @@ const surveyorSchema = new mongoose.Schema({
   gmail: { type: String, required: true, unique: true },
   surveyorID: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  confirmPassword: { type: String }, // Optional field
   mobileNo: { type: String, required: true },
   nidOrPassport: { type: String, required: true }
 }, { timestamps: true });

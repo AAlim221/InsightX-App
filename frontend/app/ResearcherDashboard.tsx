@@ -226,7 +226,7 @@ const ResearcherDashboard = () => {
                   onPress={confirmSubmit}
                 >
                   <Text className="text-center text-white font-bold">
-                    Submit
+                    Add Surveyor
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity

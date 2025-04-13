@@ -10,6 +10,8 @@ import {
 import { Link, useRouter } from "expo-router";
 import axios from "axios";
 import HeroImage from "@/components/HeroImage";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // ✅ Import storage
+
 export default function Login() {
   const router = useRouter();
 
@@ -20,44 +22,52 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       setLoading(true);
+
       if (!gmail.trim() || !password.trim()) {
         Alert.alert("Error", "Please enter both email and password");
         setLoading(false);
         return;
       }
-      
+
       const { data } = await axios.post(
         "http://192.168.0.183:8082/api/v1/auth/surveyorLogin",
-        {  gmail, password }
+        { gmail, password }
       );
+
       setLoading(false);
-      alert(data && data.message);
-      console.log("Login data ==>", { gmail, password });
-      router.push("/SurveyorDashboard");
+
+      if (data && data.success) {
+        // ✅ Save user data
+        await AsyncStorage.setItem("token", data.token);
+        await AsyncStorage.setItem("surveyorInfo", JSON.stringify(data.surveyor));
+
+        Alert.alert("Success", data.message || "Login successful");
+        router.push("/SurveyorDashboard");
+      } else {
+        Alert.alert("Login Failed", data.message || "Invalid credentials");
+      }
     } catch (error) {
+      setLoading(false);
       if (axios.isAxiosError(error)) {
         console.log("API error response:", error.response?.data);
         Alert.alert("Error", "Invalid email or password");
       } else {
         Alert.alert("Error", "An unexpected error occurred");
       }
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-black justify-between pt-12 pb-4">
       {/* Hero Image */}
-       <HeroImage/>
+      <HeroImage />
+
       {/* Login Form */}
       <View className="bg-purple-700 p-6 rounded-3xl shadow-lg mx-4 flex-1 justify-center">
-        {/* Welcome Text */}
         <Text className="text-white text-4xl font-bold text-center mb-8">
           Welcome back!
         </Text>
 
-        {/* Email Input */}
         <TextInput
           placeholder="Email"
           placeholderTextColor="black"
@@ -68,7 +78,6 @@ export default function Login() {
           autoCapitalize="none"
         />
 
-        {/* Password Input */}
         <TextInput
           placeholder="Password"
           placeholderTextColor="black"
@@ -78,7 +87,6 @@ export default function Login() {
           onChangeText={setPassword}
         />
 
-        {/* Forgot Password */}
         <Link
           href="/forgotpassword"
           className="text-right text-lg text-pink-400 font-semibold mb-4"
@@ -86,7 +94,6 @@ export default function Login() {
           Forgot password?
         </Link>
 
-        {/* Login Button */}
         <TouchableOpacity
           activeOpacity={0.7}
           className="bg-yellow-400 py-3 rounded-full mb-4"
@@ -96,7 +103,6 @@ export default function Login() {
             {loading ? "Logging in..." : "Login"}
           </Text>
         </TouchableOpacity>
-
       </View>
     </SafeAreaView>
   );
