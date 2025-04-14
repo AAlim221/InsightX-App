@@ -27,8 +27,11 @@ app.use('/api/v1/auth', require('./routes/userRoutes'));
 app.use('/api/v1/auth', require('./routes/formRoutes'));
 app.use('/api/v1/auth', require('./routes/responseRoutes'));
 app.use('/api/v1/auth', require('./routes/surveyorRoutes'));
+
 // Start server
 const PORT = process.env.PORT || 8082;
 app.listen(PORT, () => {
   console.log(`Server Running on port ${PORT}`.bgGreen.white);
+     console.log("✅ MongoDB connected");   
 });
+

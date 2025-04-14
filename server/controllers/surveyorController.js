@@ -1,11 +1,8 @@
-// ===========================
-// 📁 controllers/surveyorController.js
-// ===========================
-const JWT = require('jsonwebtoken');
-const { hashPassword, comparePassword } = require('../helpers/authHelper');
-const surveyorModel = require('../models/surveyorModel');
+const JWT = require("jsonwebtoken");
+const { hashPassword, comparePassword } = require("../helpers/authHelper");
+const surveyorModel = require("../models/surveyorModel");
 
-// ✅ Register Controller
+// Register surveyor
 const regController = async (req, res) => {
   try {
     const { name, gmail, surveyorID, password, confirmPassword, mobileNo, nidOrPassport } = req.body;
@@ -40,7 +37,7 @@ const regController = async (req, res) => {
   }
 };
 
-// ✅ Login Controller
+// Login surveyor
 const logController = async (req, res) => {
   try {
     const { gmail, password } = req.body;
@@ -56,8 +53,6 @@ const logController = async (req, res) => {
     }
 
     const token = JWT.sign({ _id: surveyor._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-
-    // Hide password in response
     const { password: pwd, confirmPassword, ...sanitized } = surveyor._doc;
 
     res.status(200).json({ success: true, message: "Login successful", token, surveyor: sanitized });
@@ -67,7 +62,50 @@ const logController = async (req, res) => {
   }
 };
 
+// Get all surveyors
+const getAllSurveyors = async (req, res) => {
+  try {
+    const surveyors = await surveyorModel
+      .find()
+      .select("-password -confirmPassword")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, data: surveyors });
+  } catch (error) {
+    console.error("Fetch Surveyors Error:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch surveyors", error });
+  }
+};
+
+// Get a single surveyor
+const getSurveyorById = async (req, res) => {
+  try {
+    const surveyor = await surveyorModel.findById(req.params.id).select("-password -confirmPassword");
+    if (!surveyor) {
+      return res.status(404).json({ success: false, message: "Surveyor not found" });
+    }
+    res.json({ success: true, data: surveyor });
+  } catch (err) {
+    console.error("Get Surveyor Error:", err);
+    res.status(500).json({ success: false, message: "Error fetching surveyor", error: err });
+  }
+};
+
+// Delete surveyor
+const deleteSurveyor = async (req, res) => {
+  try {
+    await surveyorModel.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: "Surveyor deleted" });
+  } catch (err) {
+    console.error("Delete Surveyor Error:", err);
+    res.status(500).json({ success: false, message: "Delete failed", error: err });
+  }
+};
+
 module.exports = {
   regController,
   logController,
+  getAllSurveyors,
+  getSurveyorById,
+  deleteSurveyor,
 };

@@ -17,6 +17,7 @@ import InviteSelfServeyor from '@/app/InviteSelfServeyor';
 import Profile from './Profile';
 import SurveyorDashboard from '@/app/SurveyorDashboard';
 import ResponseQuestion from '@/app/ResponseQuestion';
+import SurveyorList from './SurveyorList';
 // Define types for your stack navigator screens
 export type RootStackParamList = {
   HomeScreen: undefined;
@@ -35,6 +36,7 @@ export type RootStackParamList = {
   InviteSelfServeyor: undefined;
   Profile:undefined;
   ResponseQuestion:undefined;
+  SurveyorList:undefined;
 
 };
 
@@ -61,6 +63,7 @@ const AppNavigator = () => {
         <Stack.Screen name="ProfileMenu" component={ProfileMenu} />
         <Stack.Screen name="InviteSelfServeyor" component={InviteSelfServeyor} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="SurveyorList" component={SurveyorList} />
         <Stack.Screen name="ResponseQuestion" component={ResponseQuestion} />
       </Stack.Navigator>
     </NavigationContainer>
