@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
@@ -7,6 +7,7 @@ import ProfileCom from "@/components/ProfileCom";
 import axios from "axios";
 import { useRouter } from "expo-router";
 import { KeyboardTypeOptions } from "react-native";
+
 export default function surveyorRegister() {
   const navigation = useNavigation();
   const router = useRouter();
@@ -23,15 +24,7 @@ export default function surveyorRegister() {
   const handleSubmitSurveyor = async () => {
     try {
       setLoading(true);
-      if (
-        !name ||
-        !gmail ||
-        !surveyorID ||
-        !password ||
-        !confirmPassword ||
-        !mobileNo ||
-        !nidOrPassport
-      ) {
+      if (!name || !gmail || !surveyorID || !password || !confirmPassword || !mobileNo || !nidOrPassport) {
         Alert.alert("Error", "Please fill all the fields");
         setLoading(false);
         return;
@@ -39,25 +32,14 @@ export default function surveyorRegister() {
 
       const { data } = await axios.post(
         "http://192.168.0.183:8082/api/v1/auth/surveyorRegister",
-        {
-          name,
-          gmail,
-          surveyorID,
-          password,
-          confirmPassword,
-          mobileNo,
-          nidOrPassport,
-        }
+        { name, gmail, surveyorID, password, confirmPassword, mobileNo, nidOrPassport }
       );
 
       Alert.alert("Success", "Add Surveyor for form done!");
       router.push("/SurveyorList");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        Alert.alert(
-          "Error",
-          error.response?.data?.message || "Something went wrong"
-        );
+        Alert.alert("Error", error.response?.data?.message || "Something went wrong");
       } else {
         Alert.alert("Error", "An unexpected error occurred");
       }
@@ -86,37 +68,38 @@ export default function surveyorRegister() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-purple-500">
-      <View className="flex-1 bg-purple-600 p-4">
+    <SafeAreaView className="flex-1 bg-purple-100">
+      <View className="flex-1 p-4">
         {/* Header */}
-        <View className="flex-row justify-between items-center mb-4">
+        <View className="flex-row justify-between items-center mb-6">
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <FontAwesome name="arrow-left" size={24} color="black" />
+            <FontAwesome name="arrow-left" size={26} color="#4B0082" />
           </TouchableOpacity>
           <ProfileCom user={null} />
-
         </View>
 
-        <Text className="text-black font-bold text-3xl mb-6">Add a Surveyor!</Text>
+        <Text className="text-purple-800 font-extrabold text-3xl mb-4 text-center">Add a Surveyor</Text>
 
         {/* Input Fields */}
-        {inputItems.map((item, index) => (
-          <TextInput
-            key={index}
-            placeholder={item.placeholder}
-            placeholderTextColor="black"
-            className="h-12 bg-white text-black px-4 text-base font-semibold rounded-full mb-4"
-            value={item.value}
-            onChangeText={item.set}
-            secureTextEntry={item.secure}
-            keyboardType={item.keyboardType as KeyboardTypeOptions}
-          />
-        ))}
+        <View className="bg-white p-4 rounded-2xl shadow-md">
+          {inputItems.map((item, index) => (
+            <TextInput
+              key={index}
+              placeholder={item.placeholder}
+              placeholderTextColor="#6B7280"
+              className="h-12 bg-gray-100 text-black px-4 text-base font-medium rounded-lg mb-3 border border-gray-300"
+              value={item.value}
+              onChangeText={item.set}
+              secureTextEntry={item.secure}
+              keyboardType={item.keyboardType as KeyboardTypeOptions}
+            />
+          ))}
+        </View>
 
-        {/* Action Buttons */}
-        <View className="flex-row justify-between mt-4">
+        {/* Buttons */}
+        <View className="flex-row justify-between mt-6">
           <TouchableOpacity
-            className="bg-gray-300 px-4 py-2 rounded-lg"
+            className="bg-yellow-300 px-5 py-3 rounded-xl shadow-md"
             onPress={() => {
               setName("");
               setGmail("");
@@ -127,37 +110,32 @@ export default function surveyorRegister() {
               setNidOrPassport("");
             }}
           >
-            <Text className="text-black font-bold">Reset</Text>
+            <Text className="text-black font-semibold">Reset</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
-            className="bg-gray-300 px-4 py-2 rounded-lg"
+            className="bg-green-500 px-6 py-3 rounded-xl shadow-md"
             onPress={handleSubmitSurveyor}
+            disabled={loading}
           >
-            <Text className="text-black font-bold">
-              {loading ? "Submitting..." : "Submit"}
-            </Text>
+            {loading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <Text className="text-white font-bold">Submit</Text>
+            )}
           </TouchableOpacity>
         </View>
 
         {/* Bottom Navigation */}
-        <View className="absolute bottom-4 left-0 right-0 flex-row justify-around p-2">
-          <TouchableOpacity
-            className="bg-gray-500 p-3 rounded-lg"
-            onPress={() => router.push("/InviteSelfServeyor")}
-          >
-            <FontAwesome name="users" size={24} color="black" />
+        <View className="absolute bottom-4 left-0 right-0 flex-row justify-around p-2 bg-white border-t border-gray-200 shadow-lg">
+          <TouchableOpacity onPress={() => router.push("/InviteSelfServeyor")}>
+            <FontAwesome name="users" size={26} color="#4B5563" />
           </TouchableOpacity>
-          <TouchableOpacity
-            className="bg-gray-500 p-3 rounded-lg"
-            onPress={() => router.push("/HomeScreen")}
-          >
-            <FontAwesome name="home" size={24} color="black" />
+          <TouchableOpacity onPress={() => router.push("/HomeScreen")}>
+            <FontAwesome name="home" size={26} color="#4B5563" />
           </TouchableOpacity>
-          <TouchableOpacity
-            className="bg-gray-500 p-3 rounded-lg"
-            onPress={() => router.push("/SettingsMenu")}
-          >
-            <FontAwesome name="bars" size={24} color="black" />
+          <TouchableOpacity onPress={() => router.push("/SettingsMenu")}>
+            <FontAwesome name="cogs" size={26} color="#4B5563" />
           </TouchableOpacity>
         </View>
       </View>
