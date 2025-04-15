@@ -12,7 +12,8 @@ const SettingsMenu = (props: any) => {
   const menuItems = [
     { label: 'Profile', icon: 'person-outline', route: 'Profile' },
     { label: 'Add Surveyor', icon: 'person-add-outline', route: 'SurveyorRegister' },
-    { label: 'Surveyor List', icon: 'people-outline', route: 'SurveyorList' }, // ✅ Added new menu item
+    { label: 'Surveyor List', icon: 'people-outline', route: 'SurveyorList' },
+    { label: 'Response Analysis', icon: 'bar-chart-outline', route: 'ResponseAnalysis' }, // ✅ Corrected label & icon
     { label: 'Surveyor Dashboard', icon: 'speedometer-outline', route: 'SurveyorDashboard' },
     { label: 'Researcher Dashboard', icon: 'analytics-outline', route: 'ResearcherDashboard' },
     { label: 'Response Questions', icon: 'clipboard-outline', route: 'ResponseQuestion' },
