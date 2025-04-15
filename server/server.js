@@ -26,7 +26,7 @@ app.use(morgan('dev'));
 app.use('/api/v1/auth', require('./routes/userRoutes'));
 app.use('/api/v1/auth', require('./routes/formRoutes'));
 app.use('/api/v1/auth', require('./routes/responseRoutes'));
-app.use('/api/v1/auth', require('./routes/surveyorRoutes'));
+app.use("/api/v1/auth", require("./routes/surveyorRoutes"));
 
 // Start server
 const PORT = process.env.PORT || 8082;

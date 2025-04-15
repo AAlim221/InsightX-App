@@ -3,18 +3,11 @@ const router = express.Router();
 const {
   regController,
   logController,
-  getAllSurveyors,
-  getSurveyorById,
-  deleteSurveyor
+  surveyors,
 } = require("../controllers/surveyorController");
 
-// ✅ Fixed routes first
-router.get('/getAllSurveyors', getAllSurveyors);
-router.post('/surveyorRegister', regController);
-router.post('/surveyorLogin', logController);
-
-// ✅ Dynamic routes later
-router.get('/surveyors/:id', getSurveyorById);
-router.delete('/surveyors/:id', deleteSurveyor);
+router.post("/surveyorRegister", regController);
+router.post("/surveyorLogin", logController);
+router.get("/getAllSurveyors", surveyors); // ✅ Fixed here
 
 module.exports = router;
