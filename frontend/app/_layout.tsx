@@ -24,6 +24,7 @@ export default function RootLayout() {
         <Stack.Screen name="SurveyorDashboard" options={{ headerShown: false }} />
         <Stack.Screen name="SurveyorRegister" options={{ headerShown: false }} />
         <Stack.Screen name="SettingsMenu"options={{ headerShown: false }} />
+        <Stack.Screen name="SettingsMenuSurveyor"options={{ headerShown: false }} />
         <Stack.Screen name="ProfileMenu"options={{ headerShown: false }} />
         <Stack.Screen name="SurveyorLogin" options={{ headerShown: false }} />
         <Stack.Screen name="InviteSelfServeyor" options={{ headerShown: false }} />

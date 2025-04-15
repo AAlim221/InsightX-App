@@ -4,9 +4,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ProfileCom from "@/components/ProfileCom";
 import ButtonFooterCom from "@/components/ButtonFooterCom";
 import TemplatesSectionCom from "@/components/TemplatesSectionCom";
-import CategoriesCom from "@/components/CategoriesCom";
-import SearchBarCom from "@/components/SearchBarCom";
-
 // Define your types
 type RootStackParamList = {
   HomeScreen: undefined;
@@ -25,12 +22,8 @@ const TemplateList: React.FC = () => {
           resizeMode="contain"
         />
         {/* Profile Icon */}
-        <ProfileCom />
+        <ProfileCom user={null} />
       </View>
-      {/* Search Section */}
-      <SearchBarCom />
-      {/* Categories Section */}
-      <CategoriesCom />
       {/* Templates Section */}
       <TemplatesSectionCom />
       {/* ButtonFooterCom */}

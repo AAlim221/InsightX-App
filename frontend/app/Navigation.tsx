@@ -19,6 +19,7 @@ import SurveyorDashboard from '@/app/SurveyorDashboard';
 import ResponseQuestion from '@/app/ResponseQuestion';
 import SurveyorList from './SurveyorList';
 import ResponseAnalysis from "@/app/ResponseAnalysis"
+import SettingsMenuSurveyor from './SettingsMenuSurveyor';
 // Define types for your stack navigator screens
 export type RootStackParamList = {
   HomeScreen: undefined;
@@ -31,6 +32,7 @@ export type RootStackParamList = {
   ResearcherDashboard: undefined;
   SurveyorDashboard: undefined;
   SettingsMenu: undefined;
+  SettingsMenuSurveyor: undefined;
   SurveyorRegister: undefined;
   SurveyorLogin: undefined;
   ProfileMenu: undefined;
@@ -62,12 +64,14 @@ const AppNavigator = () => {
         <Stack.Screen name="SurveyorRegister" component={SurveyorRegister} />
         <Stack.Screen name="SurveyorLogin" component={SurveyorLogin} />
         <Stack.Screen name="SettingsMenu" component={SettingsMenu} />
+        <Stack.Screen name="SettingsMenuSurveyor" component={SettingsMenuSurveyor} />
         <Stack.Screen name="ProfileMenu" component={ProfileMenu} />
         <Stack.Screen name="InviteSelfServeyor" component={InviteSelfServeyor} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="SurveyorList" component={SurveyorList} />
         <Stack.Screen name="ResponseQuestion" component={ResponseQuestion} />
         <Stack.Screen name="ResponseAnalysis" component={ResponseAnalysis} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

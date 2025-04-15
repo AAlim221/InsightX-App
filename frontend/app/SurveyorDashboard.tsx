@@ -264,7 +264,7 @@ const SurveyorDashboard = () => {
         <TouchableOpacity onPress={() => router.push("/HomeScreen")}>
           <Ionicons name="home" size={28} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => router.push("/SettingsMenu")}>
+        <TouchableOpacity onPress={() => router.push("/SettingsMenuSurveyor")}>
           <Ionicons name="menu" size={28} color="white" />
         </TouchableOpacity>
       </View>
