@@ -11,12 +11,11 @@ const SettingsMenu = (props: any) => {
 
   const menuItems = [
     { label: 'Profile', icon: 'person-outline', route: 'Profile' },
-    { label: 'Add Surveyor', icon: 'person-add-outline', route: 'SurveyorRegister' },
-    { label: 'Surveyor List', icon: 'people-outline', route: 'SurveyorList' },
-    { label: 'Response Analysis', icon: 'bar-chart-outline', route: 'ResponseAnalysis' }, // ✅ Corrected label & icon
-    { label: 'Surveyor Dashboard', icon: 'speedometer-outline', route: 'SurveyorDashboard' },
+    { label: 'Response Analysis', icon: 'bar-chart-outline', route: 'ResponseAnalysis' },
     { label: 'Researcher Dashboard', icon: 'analytics-outline', route: 'ResearcherDashboard' },
     { label: 'Response Questions', icon: 'clipboard-outline', route: 'ResponseQuestion' },
+    { label: 'Add Surveyor', icon: 'person-add-outline', route: 'SurveyorRegister' },
+    { label: 'Surveyor List', icon: 'people-outline', route: 'SurveyorList' },
     { label: 'Notifications', icon: 'notifications-outline', route: 'Notifications' },
     { label: 'Mail Support', icon: 'mail-outline', route: 'MailSupport' },
     { label: 'Call Support', icon: 'call-outline', route: 'CallSupport' },
@@ -37,7 +36,7 @@ const SettingsMenu = (props: any) => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back" size={26} color="white" />
             </TouchableOpacity>
-            <ProfileCom user={null} /> {/* ✅ Pass a dummy user/null */}
+            <ProfileCom /> 
           </View>
           <Text className="text-white text-xl font-semibold mt-4">Settings Menu</Text>
         </View>

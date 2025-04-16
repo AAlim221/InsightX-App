@@ -61,7 +61,9 @@ const SurveyorList = () => {
             <Text className="text-white mt-4">Loading surveyors...</Text>
           </View>
         ) : surveyors.length === 0 ? (
-          <Text className="text-white text-center mt-6">No surveyors found.</Text>
+          <Text className="text-white text-center mt-6">
+            No surveyors found.
+          </Text>
         ) : (
           surveyors.map((surveyor, index) => (
             <View
@@ -72,7 +74,9 @@ const SurveyorList = () => {
                 👤 Name: {surveyor.name}
               </Text>
               <Text className="text-gray-700 mt-1">📧 {surveyor.email}</Text>
-              <Text className="text-gray-500 mt-1 text-xs">🆔 {surveyor._id}</Text>
+              <Text className="text-gray-500 mt-1 text-xs">
+                🆔 {surveyor._id}
+              </Text>
             </View>
           ))
         )}

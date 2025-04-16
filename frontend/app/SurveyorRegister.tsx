@@ -14,6 +14,7 @@ export default function surveyorRegister() {
 
   const [name, setName] = useState("");
   const [gmail, setGmail] = useState("");
+  const [surveyorID, setSurveyorID] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [mobileNo, setMobileNo] = useState("");
@@ -23,7 +24,7 @@ export default function surveyorRegister() {
   const handleSubmitSurveyor = async () => {
     try {
       setLoading(true);
-      if (!name || !gmail || !password || !confirmPassword || !mobileNo || !nidOrPassport) {
+      if (!name || !gmail || !surveyorID || !password || !confirmPassword || !mobileNo || !nidOrPassport) {
         Alert.alert("Error", "Please fill all the fields");
         setLoading(false);
         return;
@@ -31,7 +32,7 @@ export default function surveyorRegister() {
 
       const { data } = await axios.post(
         "http://192.168.0.183:8082/api/v1/auth/surveyorRegister",
-        { name, gmail, password, confirmPassword, mobileNo, nidOrPassport }
+        { name, gmail, surveyorID, password, confirmPassword, mobileNo, nidOrPassport }
       );
 
       Alert.alert("Success", "Add Surveyor for form done!");
@@ -59,6 +60,7 @@ export default function surveyorRegister() {
   const inputItems: InputItem[] = [
     { placeholder: "Name", value: name, set: setName },
     { placeholder: "Gmail", value: gmail, set: setGmail },
+    { placeholder: "Surveyor ID", value: surveyorID, set: setSurveyorID },
     { placeholder: "Password", value: password, set: setPassword, secure: true },
     { placeholder: "Confirm Password", value: confirmPassword, set: setConfirmPassword, secure: true },
     { placeholder: "Mobile No", value: mobileNo, set: setMobileNo, keyboardType: "number-pad" },
@@ -73,8 +75,9 @@ export default function surveyorRegister() {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <FontAwesome name="arrow-left" size={26} color="#4B0082" />
           </TouchableOpacity>
-          <ProfileCom />
+          <ProfileCom/>
         </View>
+
         <Text className="text-purple-800 font-extrabold text-3xl mb-4 text-center">Add a Surveyor</Text>
 
         {/* Input Fields */}
@@ -100,6 +103,7 @@ export default function surveyorRegister() {
             onPress={() => {
               setName("");
               setGmail("");
+              setSurveyorID("");
               setPassword("");
               setConfirmPassword("");
               setMobileNo("");

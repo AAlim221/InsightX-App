@@ -21,7 +21,18 @@ const QuestionSchema = new mongoose.Schema({
   minValue: { type: Number }, // For linear scale and rating
   maxValue: { type: Number }, // For linear scale and rating
   rows: [{ type: String }], // For multiple-choice grid and checkbox grid
-  columns: [{ type: String }] // For multiple-choice grid and checkbox grid
+  columns: [{ type: String }],// For multiple-choice grid and checkbox grid
+   // 🔽 MPI-specific fields
+   mpi: {
+    isMPIIndicator: { type: Boolean, default: false },
+    dimension: { type: String }, // e.g., Health, Education, etc.
+    conditionType: {
+      type: String,
+      enum: ["lessThan", "greaterThan", "equals", "notEquals", "includes"],
+    },
+    value: { type: mongoose.Schema.Types.Mixed } // Accepts Number, String, Boolean
+  }
+  
 });
 
 // Define the schema for Form

@@ -41,8 +41,13 @@ const ResearcherDashboard = () => {
 
   useEffect(() => {
     if (userParam) {
-      const parsedUser = JSON.parse(userParam as string);
-      setUser(parsedUser);
+      try {
+        const parsedUser = JSON.parse(userParam as string);  // Parsing user data
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        Alert.alert("Error", "Failed to load user data.");
+      }
     }
   }, [userParam]);
 
@@ -68,12 +73,13 @@ const ResearcherDashboard = () => {
         <TouchableOpacity onPress={() => router.push("/HomeScreen")}>
           <Ionicons name="arrow-back" size={28} color="white" />
         </TouchableOpacity>
-        <ProfileCom user={user} />
+        <Text className="text-white text-center font-semibold text-lg">Researcher Dashboard</Text>
+        <ProfileCom />
       </View>
 
       <View className="bg-purple-700 py-4 px-6">
         <View className="bg-white rounded-xl mb-4 py-4 shadow-md">
-          <Text className="text-center text-black font-semibold text-lg ">
+          <Text className="text-center text-black font-semibold text-lg">
             👩‍🔬 Researcher Name: {user?.name || "N/A"}
           </Text>
         </View>

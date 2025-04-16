@@ -4,8 +4,6 @@ import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import ProfileCom from '@/components/ProfileCom';
-
 const SettingsMenu = (props: any) => {
   const navigation = useNavigation();
 
@@ -31,7 +29,10 @@ const SettingsMenu = (props: any) => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="arrow-back" size={26} color="white" />
             </TouchableOpacity>
-            <ProfileCom user={null} /> {/* ✅ Pass a dummy user/null */}
+            {/* Profile */}
+            
+
+
           </View>
           <Text className="text-white text-xl font-semibold mt-4">Settings Menu</Text>
         </View>

@@ -6,9 +6,9 @@ const surveyorModel = require("../models/surveyorModel");
 // Register surveyor
 const regController = async (req, res) => {
   try {
-    const { name, gmail, password, confirmPassword, mobileNo, nidOrPassport } = req.body;
+    const { name, gmail, surveyorID, password, confirmPassword, mobileNo, nidOrPassport } = req.body;
 
-    if (!name || !gmail || !password || !confirmPassword || !mobileNo || !nidOrPassport) {
+    if (!name || !gmail || !surveyorID || !password || !confirmPassword || !mobileNo || !nidOrPassport) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
@@ -24,6 +24,7 @@ const regController = async (req, res) => {
     await new surveyorModel({
       name,
       gmail,
+      surveyorID,
       password: hashedPassword,
       confirmPassword: hashedPassword,
       mobileNo,
@@ -62,7 +63,6 @@ const logController = async (req, res) => {
   }
 };
 
-// Get all surveyors
 const getAllSurveyors = async (req, res) => {
   try {
     const surveyors = await surveyorModel.find().select("-password -confirmPassword").sort({ createdAt: -1 });
@@ -73,6 +73,7 @@ const getAllSurveyors = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch surveyors", error });
   }
 };
+
 
 module.exports = {
   regController,

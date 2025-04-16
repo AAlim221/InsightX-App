@@ -109,7 +109,7 @@ const ResponseQuestion = () => {
         <TouchableOpacity onPress={() => router.push("/HomeScreen")}>
           <Ionicons name="arrow-back" size={28} color="white" />
         </TouchableOpacity>
-        <ProfileCom user={user} /> // If user prop is expected
+        <ProfileCom/> 
       </View>
       <View className="bg-purple-700 px-4 ">
         <Text className="bg-white p-4 rounded-2xl max-h-[90%] shadow-lg mb-4">Surveyor Name:Alim</Text>

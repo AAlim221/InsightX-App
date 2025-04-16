@@ -1,5 +1,5 @@
 const JWT = require('jsonwebtoken');
-const formsModel = require('../models/formsModel'); // Assuming this is your Mongoose schema
+const formsModel = require('../models/formsModel');
 
 // Create a new form
 const createForm = async (req, res) => {
@@ -13,8 +13,11 @@ const createForm = async (req, res) => {
     }
 
     for (const question of questions) {
-      const { type, options, minValue, maxValue, rows, columns } = question;
+      const {
+        type, options, minValue, maxValue, rows, columns, mpi
+      } = question;
 
+      // Validate question type-specific requirements
       if (
         (["multiple-choice", "checkboxes", "multiple-choice-grid", "checkbox-grid"].includes(type)) &&
         (!options || options.length === 0)
@@ -34,6 +37,22 @@ const createForm = async (req, res) => {
         (!rows || !columns || rows.length === 0 || columns.length === 0)
       ) {
         return res.status(400).json({ error: `Rows and Columns must be provided for ${type}` });
+      }
+
+      // ✅ Validate MPI-specific fields if applicable
+      if (mpi?.isMPIIndicator === true) {
+        if (!mpi.dimension || !mpi.conditionType || mpi.value === undefined) {
+          return res.status(400).json({
+            error: `MPI indicator questions must include 'dimension', 'conditionType', and 'value'.`
+          });
+        }
+
+        const validConditions = ["lessThan", "greaterThan", "equals", "notEquals", "includes"];
+        if (!validConditions.includes(mpi.conditionType)) {
+          return res.status(400).json({
+            error: `'conditionType' must be one of: ${validConditions.join(", ")}`
+          });
+        }
       }
     }
 
@@ -69,7 +88,6 @@ const submitForm = async (req, res) => {
   res.status(200).json({ message: "Submit form not implemented yet" });
 };
 
-// Export all three
 module.exports = {
   createForm,
   getAllForms,
