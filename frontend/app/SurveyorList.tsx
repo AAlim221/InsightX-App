@@ -1,3 +1,4 @@
+// 📁 SurveyorList.tsx
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -23,14 +24,13 @@ const SurveyorList = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Make sure loading is true at the start of the API request
     setLoading(true);
 
     axios
       .get("http://192.168.0.183:8082/api/v1/auth/getAllSurveyors")
       .then((response) => {
         if (response.data.success) {
-          setSurveyors(response.data.data); // Assuming "data" contains the surveyor list
+          setSurveyors(response.data.data);
         } else {
           throw new Error("Failed to fetch surveyors.");
         }
@@ -40,7 +40,7 @@ const SurveyorList = () => {
         Alert.alert("Error", "Could not load surveyor list.");
       })
       .finally(() => {
-        setLoading(false); // Set loading to false after the request is finished
+        setLoading(false);
       });
   }, []);
 
