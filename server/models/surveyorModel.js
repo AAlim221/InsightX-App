@@ -1,4 +1,3 @@
-// 📁 models/surveyorModel.js
 const mongoose = require("mongoose");
 
 const surveyorSchema = new mongoose.Schema(
@@ -9,7 +8,11 @@ const surveyorSchema = new mongoose.Schema(
     password: { type: String, required: true },
     confirmPassword: { type: String, required: true },
     mobileNo: { type: String, required: true },
-    nidOrPassport: { type: String, required: true }
+    nidOrPassport: { type: String, required: true },
+    formId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Form",
+    },
   },
   { timestamps: true }
 );

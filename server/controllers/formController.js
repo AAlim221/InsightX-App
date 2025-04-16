@@ -1,3 +1,4 @@
+const axios = require('axios');
 const JWT = require('jsonwebtoken');
 const formsModel = require('../models/formsModel');
 
@@ -13,11 +14,8 @@ const createForm = async (req, res) => {
     }
 
     for (const question of questions) {
-      const {
-        type, options, minValue, maxValue, rows, columns, mpi
-      } = question;
+      const { type, options, minValue, maxValue, rows, columns, mpi } = question;
 
-      // Validate question type-specific requirements
       if (
         (["multiple-choice", "checkboxes", "multiple-choice-grid", "checkbox-grid"].includes(type)) &&
         (!options || options.length === 0)
@@ -39,7 +37,6 @@ const createForm = async (req, res) => {
         return res.status(400).json({ error: `Rows and Columns must be provided for ${type}` });
       }
 
-      // ✅ Validate MPI-specific fields if applicable
       if (mpi?.isMPIIndicator === true) {
         if (!mpi.dimension || !mpi.conditionType || mpi.value === undefined) {
           return res.status(400).json({
@@ -83,6 +80,26 @@ const getAllForms = async (req, res) => {
   }
 };
 
+const getFormById = async (req, res) => {
+  const { formId } = req.params;
+
+  try {
+    // Query the database using the correct model
+    const form = await formsModel.findById(formId);  // Changed from Form to formsModel
+
+    if (!form) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    // Respond with the form data
+    res.status(200).json(form);
+  } catch (error) {
+    console.error("Error fetching form:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 // Placeholder for submitForm
 const submitForm = async (req, res) => {
   res.status(200).json({ message: "Submit form not implemented yet" });
@@ -91,5 +108,6 @@ const submitForm = async (req, res) => {
 module.exports = {
   createForm,
   getAllForms,
+  getFormById,
   submitForm,
 };

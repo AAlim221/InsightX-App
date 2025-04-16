@@ -39,7 +39,12 @@ export default function Login() {
       if (data && data.success) {
         // ✅ Save user data
         await AsyncStorage.setItem("token", data.token);
-        await AsyncStorage.setItem("surveyorInfo", JSON.stringify(data.surveyor));
+        await AsyncStorage.setItem("surveyorInfo", JSON.stringify({
+          name: data.surveyor.name,
+          gmail: data.surveyor.gmail,
+          surveyorID: data.surveyor.surveyorID,
+          formId: data.surveyor.formId, // 👈 include this!
+        }));
 
         Alert.alert("Success", data.message || "Login successful");
         router.push("/SurveyorDashboard");
