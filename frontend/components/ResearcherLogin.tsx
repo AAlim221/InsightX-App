@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import {
   SafeAreaView,
   View,
@@ -9,8 +8,9 @@ import {
   Alert,
 } from "react-native";
 import { Link, useRouter } from "expo-router";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import SocialLogin from "./SocialLogin";
-
 export default function Login() {
   const router = useRouter();
 
@@ -37,6 +37,10 @@ export default function Login() {
 
       alert(data && data.message);
       console.log("Login data==>", { email, password });
+
+      // Store user data in AsyncStorage
+      await AsyncStorage.setItem("userData", JSON.stringify(data.user));
+
       router.push("/HomeScreen"); // Navigate to Home
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -44,11 +48,9 @@ export default function Login() {
       } else {
         Alert.alert("Error", "An unexpected error occurred");
       }
-      /* console.error(error); */
     } finally {
       setLoading(false);
     }
-    //console.log("Logging in with:", form);
   };
 
   return (
@@ -98,13 +100,11 @@ export default function Login() {
           onPress={handleLogin}
         >
           <Text className="text-center text-black text-lg font-bold">Login</Text>
-
         </TouchableOpacity>
 
         {/* Social Login */}
-        <SocialLogin/>
+        <SocialLogin />
         {/* Signup Link */}
-
         <View className="mt-4">
           <Text className="text-white text-center text-base">
             Don’t have an account?{" "}
@@ -112,7 +112,7 @@ export default function Login() {
               Sign up
             </Link>
           </Text>
-           {/* Surveyor Link*/}
+          {/* Surveyor Link*/}
           <Text className="text-white text-center text-base">
             Are You Surveyor?{" "}
             <Link href="/SurveyorLogin" className="text-yellow-300 font-semibold">

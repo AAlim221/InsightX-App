@@ -1,112 +1,91 @@
-import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
-  View, Text, TextInput, FlatList, ActivityIndicator, Alert, TouchableOpacity,
-} from 'react-native';
-import axios from 'axios';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-// ✅ Type definitions
-type Surveyor = {
+type SurveyorType = {
   _id: string;
   name: string;
-  gmail: string;
-  surveyorID: string;
-  mobileNo: string;
-  nidOrPassport: string;
+  email: string;
 };
 
-const SurveyorList: React.FC = () => {
-  const router = useRouter();
-  const [surveyors, setSurveyors] = useState<Surveyor[]>([]);
-  const [filtered, setFiltered] = useState<Surveyor[]>([]);
-  const [search, setSearch] = useState('');
+const SurveyorList = () => {
+  const [surveyors, setSurveyors] = useState<SurveyorType[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchSurveyors = async () => {
-    try {
-      const { data } = await axios.get('http://192.168.0.183:8082/api/v1/auth/surveyors');
-      setSurveyors(data.data);
-      setFiltered(data.data);
-    } catch (error) {
-      Alert.alert('Error', 'Failed to fetch surveyors');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (id: string): Promise<void> => {
-    Alert.alert("Confirm", "Delete this surveyor?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete", style: "destructive", onPress: async () => {
-          try {
-            await axios.delete(`http://192.168.0.183:8082/api/v1/auth/surveyors/${id}`);
-            fetchSurveyors();
-          } catch (err) {
-            Alert.alert("Error", "Failed to delete surveyor");
-          }
-        }
-      }
-    ]);
-  };
-
-  const handleSearch = (text: string): void => {
-    setSearch(text);
-    const filteredData = surveyors.filter((s) =>
-      s.name.toLowerCase().includes(text.toLowerCase())
-    );
-    setFiltered(filteredData);
-  };
-
   useEffect(() => {
-    fetchSurveyors();
+    // Make sure loading is true at the start of the API request
+    setLoading(true);
+
+    axios
+      .get("http://192.168.0.183:8082/api/v1/auth/getAllSurveyors")
+      .then((response) => {
+        if (response.data.success) {
+          setSurveyors(response.data.data); // Assuming "data" contains the surveyor list
+        } else {
+          throw new Error("Failed to fetch surveyors.");
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to fetch surveyors:", error);
+        Alert.alert("Error", "Could not load surveyor list.");
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false after the request is finished
+      });
   }, []);
 
-  const renderItem = ({ item }: { item: Surveyor }) => (
-    <View className="bg-white rounded-xl p-4 mb-3 shadow-md">
-      <Text className="text-lg font-semibold text-purple-800">{item.name}</Text>
-      <Text className="text-sm text-gray-600">Gmail: {item.gmail}</Text>
-      <Text className="text-sm text-gray-600">Mobile: {item.mobileNo}</Text>
-      <View className="flex-row justify-end mt-2 space-x-3">
-        <TouchableOpacity onPress={() => router.push({ pathname: '/EditSurveyor', params: { id: item._id } })}>
-          <Ionicons name="create-outline" size={22} color="green" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleDelete(item._id)}>
-          <Ionicons name="trash-outline" size={22} color="red" />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-
   return (
-    <SafeAreaView className="flex-1 bg-purple-50 px-4 py-2">
-      <View className="flex-row items-center justify-between mb-4">
-        <Text className="text-2xl font-bold text-purple-900">Surveyor List</Text>
-        <TouchableOpacity onPress={() => fetchSurveyors()}>
-          <Ionicons name="refresh-outline" size={24} color="purple" />
+    <SafeAreaView className="flex-1 bg-purple-900">
+      <View className="bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-4 flex-row items-center justify-between">
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={28} color="white" />
         </TouchableOpacity>
+        <Text className="text-white font-semibold text-lg">Surveyor List</Text>
+        <View style={{ width: 28 }} />
       </View>
 
-      <TextInput
-        placeholder="Search by name"
-        placeholderTextColor="gray"
-        className="bg-white p-3 mb-4 rounded-lg text-black shadow"
-        value={search}
-        onChangeText={handleSearch}
-      />
+      <ScrollView className="px-4 bg-purple-700 flex-1">
+        {loading ? (
+          <View className="flex-1 justify-center items-center mt-8">
+            <ActivityIndicator size="large" color="#fff" />
+            <Text className="text-white mt-4">Loading surveyors...</Text>
+          </View>
+        ) : surveyors.length === 0 ? (
+          <Text className="text-white text-center mt-6">No surveyors found.</Text>
+        ) : (
+          surveyors.map((surveyor, index) => (
+            <View
+              key={surveyor._id}
+              className="bg-white my-3 p-4 rounded-2xl shadow-md"
+            >
+              <Text className="text-purple-800 font-bold text-base">
+                👤 Name: {surveyor.name}
+              </Text>
+              <Text className="text-gray-700 mt-1">📧 {surveyor.email}</Text>
+              <Text className="text-gray-500 mt-1 text-xs">🆔 {surveyor._id}</Text>
+            </View>
+          ))
+        )}
+      </ScrollView>
 
-      {loading ? (
-        <ActivityIndicator size="large" color="#6B21A8" />
-      ) : (
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item._id}
-          renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 100 }}
-        />
-      )}
+      <View className="flex-row bg-purple-800 py-4 justify-around px-8 shadow-inner">
+        <TouchableOpacity onPress={() => router.push("/HomeScreen")}>
+          <Ionicons name="home" size={30} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("/SettingsMenu")}>
+          <Ionicons name="menu" size={30} color="white" />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };

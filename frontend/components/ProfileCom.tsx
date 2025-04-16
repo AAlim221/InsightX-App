@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  Alert,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, Modal, TextInput, Alert } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Navigation types
 type RootStackParamList = {
@@ -18,23 +12,45 @@ type RootStackParamList = {
 
 // User type
 type UserType = {
-  name: string;
-  email: string;
   _id: string;
+  userName: string;
+  email: string;
+  contactNo: string;
+  DOB: string;
+  role: string;
+  createdAt: string;
 };
 
-const ProfileCom = ({ user }: { user: UserType | null }) => {
+const ProfileCom = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [editedUser, setEditedUser] = useState<UserType | null>(user);
+  const [editedUser, setEditedUser] = useState<UserType | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
+  // Fetch user data from AsyncStorage
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const storedUserData = await AsyncStorage.getItem("userData");
+        if (storedUserData) {
+          setUser(JSON.parse(storedUserData));
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  // Handle logout
   const handleLogout = () => {
-    // You can clear tokens here if using auth
     navigation.navigate("index");
   };
 
+  // Handle save after editing
   const handleSave = async () => {
     try {
       const res = await axios.put(
@@ -44,6 +60,8 @@ const ProfileCom = ({ user }: { user: UserType | null }) => {
       if (res.status === 200) {
         Alert.alert("Updated", "Your profile has been updated.");
         setEditMode(false);
+        setUser(editedUser); // Update the user data in state
+        await AsyncStorage.setItem("userData", JSON.stringify(editedUser)); // Store updated data in AsyncStorage
       }
     } catch (err) {
       console.error(err);
@@ -51,6 +69,7 @@ const ProfileCom = ({ user }: { user: UserType | null }) => {
     }
   };
 
+  // Handle delete
   const handleDelete = async () => {
     Alert.alert("Confirm", "Do you really want to delete this account?", [
       { text: "Cancel", style: "cancel" },
@@ -63,7 +82,8 @@ const ProfileCom = ({ user }: { user: UserType | null }) => {
               `http://192.168.0.183:8082/api/v1/auth/deleteResearcher/${user?._id}`
             );
             Alert.alert("Deleted", "Account has been deleted.");
-            navigation.navigate("index");
+            await AsyncStorage.removeItem("userData"); // Remove the user data from AsyncStorage
+            navigation.navigate("index"); // Navigate to index or home screen
           } catch (err) {
             Alert.alert("Error", "Deletion failed.");
           }
@@ -72,6 +92,7 @@ const ProfileCom = ({ user }: { user: UserType | null }) => {
     ]);
   };
 
+  // Render the Profile modal
   return (
     <View className="flex items-center">
       {/* Button to open profile modal */}
@@ -95,9 +116,18 @@ const ProfileCom = ({ user }: { user: UserType | null }) => {
               Researcher Profile
             </Text>
 
-            {["name", "email"].map((field) => (
+            {/* Display User Fields */}
+            {[
+              { label: "User Name", field: "userName" },
+              { label: "Email", field: "email" },
+              { label: "Contact No", field: "contactNo" },
+              { label: "Date of Birth", field: "DOB" },
+              { label: "Role", field: "role" },
+              { label: "ID", field: "_id" },
+              { label: "Created At", field: "createdAt" },
+            ].map(({ label, field }) => (
               <View key={field} className="mb-4">
-                <Text className="text-gray-700 mb-1 capitalize">{field}</Text>
+                <Text className="text-gray-700 mb-1 capitalize">{label}</Text>
                 {editMode ? (
                   <TextInput
                     className="border border-gray-300 rounded-md px-3 py-2"
@@ -160,9 +190,7 @@ const ProfileCom = ({ user }: { user: UserType | null }) => {
                 setModalVisible(false);
               }}
             >
-              <Text className="text-blue-500 text-lg font-semibold">
-                Cancel
-              </Text>
+              <Text className="text-blue-500 text-lg font-semibold">Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>

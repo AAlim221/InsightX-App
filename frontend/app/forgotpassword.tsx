@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import {
-  SafeAreaView, View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform,
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Alert,
 } from "react-native";
-import { Link } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";  // Icon library for back arrow
+import { Ionicons } from "@expo/vector-icons"; // Icon library for back arrow
+import { useRouter } from "expo-router"; // Import useRouter for navigation
 
 interface FormState {
   email: string;
@@ -17,6 +24,24 @@ export default function Signup() {
     password: "",
     confirmPassword: "",
   });
+  const router = useRouter(); // Initialize the router
+
+  // Handle form submission
+  const handleSubmit = () => {
+    const { email, password, confirmPassword } = form;
+    if (!email || !password || !confirmPassword) {
+      Alert.alert("Error", "All fields are required!");
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert("Error", "Passwords do not match!");
+      return;
+    }
+    // Proceed with signup or password reset
+    Alert.alert("Success", "Your password has been created!");
+    // Navigate to the 'index' page (login screen)
+    router.push("/"); // Assuming the login screen is the root page
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-black">
@@ -28,12 +53,10 @@ export default function Signup() {
         <View className="flex-[0.3] bg-slate-600 rounded-3xl justify-start items-start p-4 mt-16 mb-4">
           {/* Back Button */}
           <TouchableOpacity className="flex-row items-center" activeOpacity={0.7}>
-            <Link href="/">
-              <Ionicons name="arrow-back" size={24} color="white" />
-            </Link>
+            <Ionicons name="arrow-back" size={24} color="white" />
             <Text className="text-white text-lg ml-2">Back</Text>
           </TouchableOpacity>
-          <Text className="text-pretty text-justify text-8xl"> Adds here...</Text>
+          <Text className="text-white text-8xl font-bold">Create a Password</Text>
         </View>
 
         {/* Bottom 70% Purple Form Section */}
@@ -65,7 +88,7 @@ export default function Signup() {
 
           {/* Confirm Password Input */}
           <TextInput
-            placeholder="Confirm password"
+            placeholder="Confirm Password"
             placeholderTextColor="black"
             className="h-12 bg-white text-black px-4 text-base font-semibold rounded-full mb-8"
             secureTextEntry
@@ -75,10 +98,12 @@ export default function Signup() {
           />
 
           {/* Submit Button */}
-          <TouchableOpacity activeOpacity={0.7} className="bg-yellow-400 py-3 rounded-full">
-            <Link href="/">
-              <Text className="text-center text-black text-lg font-bold">Submit</Text>
-            </Link>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={handleSubmit}
+            className="bg-yellow-400 py-3 rounded-full"
+          >
+            <Text className="text-center text-black text-lg font-bold">Submit</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>

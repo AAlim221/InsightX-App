@@ -10,7 +10,6 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Props interface for the main component
 interface QuesBoxProps {
   index: number;
   question: string;
@@ -18,7 +17,7 @@ interface QuesBoxProps {
   options: string[];
   rows?: string[];
   columns?: string[];
-  minValue?: number;  // Add minValue and maxValue as optional
+  minValue?: number;
   maxValue?: number;
   onQuestionChange: (index: number, value: string) => void;
   onTypeChange: (index: number, type: string) => void;
@@ -26,8 +25,8 @@ interface QuesBoxProps {
   onGridChange?: (index: number, rows: string[], columns: string[]) => void;
   onCopyQuestion: (index: number) => void;
   onDeleteQuestion: (index: number) => void;
-  onMinValueChange: (index: number, minValue: number) => void;  // Added this
-  onMaxValueChange: (index: number, maxValue: number) => void;  // Added this
+  onMinValueChange: (index: number, minValue: number) => void;
+  onMaxValueChange: (index: number, maxValue: number) => void;
 }
 
 const QuestionBoxCom: React.FC<QuesBoxProps> = ({
@@ -45,7 +44,7 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
   onGridChange,
   onCopyQuestion,
   onDeleteQuestion,
-  onMinValueChange,  // Destructure the min/max change handlers
+  onMinValueChange,
   onMaxValueChange,
 }) => {
   const [isRequired, setIsRequired] = useState(false);
@@ -65,7 +64,6 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
     "checkbox-grid",
   ];
 
-  // handle Option slection
   const handleOptionSelect = (option: string) => {
     setDropdownVisible(false);
     setMcqOptions(option === "multiple-choice" || option === "checkboxes" ? [""] : []);
@@ -74,7 +72,6 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
     onTypeChange(index, option);
   };
 
-  // Handle Mcq Change
   const handleMcqChange = (text: string, optionIndex: number) => {
     const updatedOptions = [...mcqOptions];
     updatedOptions[optionIndex] = text;
@@ -82,19 +79,16 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
     onOptionsChange(index, updatedOptions);
   };
 
-  // Handle Add Option
   const handleAddOption = () => {
     const updatedOptions = [...mcqOptions, ""];
     setMcqOptions(updatedOptions);
     onOptionsChange(index, updatedOptions);
   };
 
-  // Option Generate for Grid
   const generateGridOptions = (numRows: number, numColumns: number): string[] => {
     return Array.from({ length: numRows * numColumns }, (_, i) => `Option ${i + 1}`);
   };
 
-  // handle Grid Update
   const handleGridUpdate = (updatedRows: string[], updatedColumns: string[]) => {
     setGridRows([...updatedRows]);
     setGridColumns([...updatedColumns]);
@@ -104,24 +98,20 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
     onOptionsChange(index, generateGridOptions(updatedRows.length, updatedColumns.length));
   };
 
-  // handle Row Change
   const handleRowChange = (text: string, rowIndex: number) => {
     const updatedRows = [...gridRows];
     updatedRows[rowIndex] = text;
     handleGridUpdate(updatedRows, gridColumns);
   };
 
-  // handle Column Change
   const handleColumnChange = (text: string, colIndex: number) => {
     const updatedColumns = [...gridColumns];
     updatedColumns[colIndex] = text;
     handleGridUpdate(gridRows, updatedColumns);
   };
 
-  // Handle Add Row
   const handleAddRow = () => handleGridUpdate([...gridRows, `Row ${gridRows.length + 1}`], gridColumns);
 
-  // Handle Add Column
   const handleAddColumn = () => handleGridUpdate(gridRows, [...gridColumns, `Col ${gridColumns.length + 1}`]);
 
   return (

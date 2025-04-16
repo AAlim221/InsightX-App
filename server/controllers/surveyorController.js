@@ -63,57 +63,20 @@ const logController = async (req, res) => {
   }
 };
 
-// Get all surveyors
 const getAllSurveyors = async (req, res) => {
   try {
     const surveyors = await surveyorModel.find().select("-password -confirmPassword").sort({ createdAt: -1 });
+    console.log("Surveyors fetched successfully:", surveyors);  // Debug log
     res.status(200).json({ success: true, data: surveyors });
   } catch (error) {
-    console.error("Fetch Surveyors Error:", error);
+    console.error("Fetch Surveyors Error:", error);  // Log the error to identify the issue
     res.status(500).json({ success: false, message: "Failed to fetch surveyors", error });
   }
 };
 
-// Get single surveyor
-const getSurveyorById = async (req, res) => {
-  try {
-    const surveyor = await surveyorModel.findById(req.params.id).select("-password -confirmPassword");
-    if (!surveyor) return res.status(404).json({ success: false, message: "Surveyor not found" });
-    res.json({ success: true, data: surveyor });
-  } catch (err) {
-    console.error("Get Surveyor Error:", err);
-    res.status(500).json({ success: false, message: "Error fetching surveyor", error: err });
-  }
-};
-
-// Update surveyor
-const updateSurveyor = async (req, res) => {
-  try {
-    const updated = await surveyorModel.findByIdAndUpdate(req.params.id, req.body, { new: true }).select("-password -confirmPassword");
-    if (!updated) return res.status(404).json({ success: false, message: "Surveyor not found" });
-    res.json({ success: true, data: updated });
-  } catch (err) {
-    console.error("Update Surveyor Error:", err);
-    res.status(500).json({ success: false, message: "Update failed", error: err });
-  }
-};
-
-// Delete surveyor
-const deleteSurveyor = async (req, res) => {
-  try {
-    await surveyorModel.findByIdAndDelete(req.params.id);
-    res.json({ success: true, message: "Surveyor deleted" });
-  } catch (err) {
-    console.error("Delete Surveyor Error:", err);
-    res.status(500).json({ success: false, message: "Delete failed", error: err });
-  }
-};
 
 module.exports = {
   regController,
   logController,
-  getAllSurveyors,
-  getSurveyorById,
-  updateSurveyor,
-  deleteSurveyor,
+  getAllSurveyors
 };
