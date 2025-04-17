@@ -7,7 +7,7 @@ import {
   Modal,
   TextInput,
   FlatList,
-  Dimensions,SafeAreaView,
+  Dimensions,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
