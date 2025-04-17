@@ -67,7 +67,7 @@ const SurveyorDashboard = () => {
             if (parsed.formId) {
               try {
                 const formRes = await axios.get(
-                  `http://192.168.0.183:8082/api/v1/auth/getFormById/${parsed.formId}`
+                  `http://172.20.93.54:8082/api/v1/auth/getFormById/${parsed.formId}`
                 );
                 if (formRes.data) {
                   setForms([formRes.data]);
@@ -113,7 +113,7 @@ const SurveyorDashboard = () => {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.183:8082/api/v1/auth/submit",
+        "http://172.20.93.54:8082/api/v1/auth/submit",
         payload,
         { headers: { "Content-Type": "application/json" } }
       );
@@ -143,7 +143,7 @@ const SurveyorDashboard = () => {
       if (!surveyorInfo?.gmail) return;
 
       await axios.delete(
-        `http://192.168.0.183:8082/api/v1/auth/deleteSurveyor/${surveyorInfo.gmail}`
+        `http://172.20.93.54:8082/api/v1/auth/deleteSurveyor/${surveyorInfo.gmail}`
       );
       await AsyncStorage.clear();
       Alert.alert("Deleted", "Your account has been deleted.");
@@ -158,7 +158,7 @@ const SurveyorDashboard = () => {
 
     try {
       const res = await axios.put(
-        "http://192.168.0.183:8082/api/v1/auth/updateSurveyor",
+        "http://172.20.93.54:8082/api/v1/auth/updateSurveyor",
         {
           gmail: surveyorInfo.gmail,
           name: editedName,

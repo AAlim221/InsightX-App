@@ -22,7 +22,7 @@ const TemplateList: React.FC = () => {
           resizeMode="contain"
         />
         {/* Profile Icon */}
-        <ProfileCom user={null} />
+        <ProfileCom />
       </View>
       {/* Templates Section */}
       <TemplatesSectionCom />

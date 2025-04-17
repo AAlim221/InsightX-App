@@ -7,7 +7,7 @@ import {
   Modal,
   TextInput,
   FlatList,
-  Dimensions,
+  Dimensions,SafeAreaView,
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { PieChart } from 'react-native-chart-kit';
@@ -74,9 +74,8 @@ const ResponseAnalysis = () => {
   return (
     <ScrollView className="bg-white flex-1 p-4">
       {/* Dashboard Header */}
-      <View className="items-center mb-4">
-        <Text className="text-3xl font-bold text-green-700">SurveyMonkey</Text>
-        <Text className="text-xl font-semibold text-gray-600">Dashboard</Text>
+      <View className="items-center mt-16">
+        <Text className="text-3xl font-bold text-green-700 mb-8">Survey Dashboard</Text>
       </View>
 
       {/* Info Tiles */}
@@ -229,6 +228,7 @@ const ResponseAnalysis = () => {
         </View>
       </Modal>
     </ScrollView>
+
   );
 };
 

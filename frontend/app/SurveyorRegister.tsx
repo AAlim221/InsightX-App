@@ -41,7 +41,7 @@ export default function surveyorRegister() {
       }
 
       const { data } = await axios.post(
-        `http://192.168.0.183:8082/api/v1/auth/SurveyorRegister?formId=${formId}`,
+        `http://172.20.93.54:8082/api/v1/auth/SurveyorRegister?formId=${formId}`,
         {
           name,
           gmail,
