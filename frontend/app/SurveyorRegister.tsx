@@ -1,17 +1,24 @@
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import React, { useState } from "react";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  KeyboardTypeOptions,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import ProfileCom from "@/components/ProfileCom";
 import axios from "axios";
-import { useRouter , useLocalSearchParams} from "expo-router";
-const router = useRouter();
-import { KeyboardTypeOptions } from "react-native";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ProfileCom from "@/components/ProfileCom";
+
 export default function surveyorRegister() {
   const navigation = useNavigation();
   const router = useRouter();
-  const { formId } = useLocalSearchParams(); // ⬅️ Move this inside the component
+  const { formId } = useLocalSearchParams();
   console.log("Form ID from URL:", formId);
 
   const [name, setName] = useState("");
@@ -50,12 +57,24 @@ export default function surveyorRegister() {
           confirmPassword,
           mobileNo,
           nidOrPassport,
-         
         }
       );
 
+      // ✅ Store data for ProfileCom
+      const formattedUser = {
+        _id: data._id,
+        userName: data.name,
+        email: data.gmail,
+        contactNo: data.mobileNo,
+        DOB: data.DOB || "",
+        role: data.role || "Researcher",
+        createdAt: data.createdAt || new Date().toISOString(),
+      };
+
+      await AsyncStorage.setItem("userData", JSON.stringify(formattedUser));
+
       Alert.alert("Success", "Add Surveyor for form done!");
-      router.push("/SurveyorList");
+      router.push("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         Alert.alert(
@@ -71,22 +90,39 @@ export default function surveyorRegister() {
     }
   };
 
-  type InputItem = {
+  const inputItems: {
     placeholder: string;
     value: string;
     set: (text: string) => void;
     secure?: boolean;
     keyboardType?: KeyboardTypeOptions;
-  };
-
-  const inputItems: InputItem[] = [
+  }[] = [
     { placeholder: "Name", value: name, set: setName },
     { placeholder: "Gmail", value: gmail, set: setGmail },
     { placeholder: "Surveyor ID", value: surveyorID, set: setSurveyorID },
-    { placeholder: "Password", value: password, set: setPassword, secure: true },
-    { placeholder: "Confirm Password", value: confirmPassword, set: setConfirmPassword, secure: true },
-    { placeholder: "Mobile No", value: mobileNo, set: setMobileNo, keyboardType: "number-pad" },
-    { placeholder: "NID or Passport", value: nidOrPassport, set: setNidOrPassport },
+    {
+      placeholder: "Password",
+      value: password,
+      set: setPassword,
+      secure: true,
+    },
+    {
+      placeholder: "Confirm Password",
+      value: confirmPassword,
+      set: setConfirmPassword,
+      secure: true,
+    },
+    {
+      placeholder: "Mobile No",
+      value: mobileNo,
+      set: setMobileNo,
+      keyboardType: "number-pad",
+    },
+    {
+      placeholder: "NID or Passport",
+      value: nidOrPassport,
+      set: setNidOrPassport,
+    },
   ];
 
   return (
@@ -97,11 +133,12 @@ export default function surveyorRegister() {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <FontAwesome name="arrow-left" size={24} color="black" />
           </TouchableOpacity>
-          <ProfileCom/>
-
+          <ProfileCom />
         </View>
 
-        <Text className="text-black font-bold text-3xl mb-6">Add a Surveyor!</Text>
+        <Text className="text-black font-bold text-3xl mb-6">
+          Add a Surveyor!
+        </Text>
 
         {/* Input Fields */}
         {inputItems.map((item, index) => (
@@ -113,7 +150,7 @@ export default function surveyorRegister() {
             value={item.value}
             onChangeText={item.set}
             secureTextEntry={item.secure}
-            keyboardType={item.keyboardType as KeyboardTypeOptions}
+            keyboardType={item.keyboardType}
           />
         ))}
 

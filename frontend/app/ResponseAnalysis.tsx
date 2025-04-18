@@ -51,12 +51,11 @@ const ResponseAnalysis = () => {
     }
   };
 
-  const getStatusCounts = (): { pending: number; reviewed: number; flagged: number } => {
+  const getStatusCounts = () => {
     const counts = { pending: 0, reviewed: 0, flagged: 0 };
-    const validStatuses = ["pending", "reviewed", "flagged"] as const;
     responses.forEach((r) => {
       const status = r.reviewStatus;
-      if (validStatuses.includes(status)) {
+      if (["pending", "reviewed", "flagged"].includes(status)) {
         counts[status as keyof typeof counts]++;
       }
     });
@@ -101,11 +100,8 @@ const ResponseAnalysis = () => {
           </div>`;
       }).join('');
 
-      const htmlContent = `
-        <html><body style="font-family: Arial; padding: 20px;">
-          <h1>Survey Responses</h1>
-          ${htmlRows}
-        </body></html>`;
+      const htmlContent = `<html><body style="font-family: Arial; padding: 20px;">
+        <h1>Survey Responses</h1>${htmlRows}</body></html>`;
 
       const { uri } = await Print.printToFileAsync({ html: htmlContent });
       await Sharing.shareAsync(uri);
@@ -114,7 +110,52 @@ const ResponseAnalysis = () => {
     }
   };
 
+  const calculateMpiStats = () => {
+    const total = responses.length || 1;
+    let housing = 0, education = 0, water = 0, electricity = 0;
+    responses.forEach((res) => {
+      res.answers.forEach((a: any) => {
+        if (a.question.includes("housing") && a.response === "poor") housing++;
+        if (a.question.includes("education") && a.response === "none") education++;
+        if (a.question.includes("water") && a.response === "no") water++;
+        if (a.question.includes("electricity") && a.response === "no") electricity++;
+      });
+    });
+    const overall = (housing + education + water + electricity) / (4 * total);
+    return {
+      housing: (housing / total * 100).toFixed(0),
+      education: (education / total * 100).toFixed(0),
+      water: (water / total * 100).toFixed(0),
+      electricity: (electricity / total * 100).toFixed(0),
+      overall,
+    };
+  };
+
+  const calculateVulnerability = () => {
+    let high = 0, moderate = 0, low = 0;
+    responses.forEach((res) => {
+      const riskScore = res.answers.reduce((score: number, a: any) => {
+        if (a.question.includes("income") && a.response === "below 1000") score += 2;
+        if (a.question.includes("health") && a.response === "poor") score += 2;
+        if (a.question.includes("age") && parseInt(a.response) > 65) score += 1;
+        return score;
+      }, 0);
+      if (riskScore >= 4) high++;
+      else if (riskScore >= 2) moderate++;
+      else low++;
+    });
+    return {
+      high,
+      moderate,
+      low,
+      total: high + moderate,
+      totalResponses: responses.length,
+    };
+  };
+
   const statusCounts = getStatusCounts();
+  const mpiStats = calculateMpiStats();
+  const vulnerabilityStats = calculateVulnerability();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -123,10 +164,7 @@ const ResponseAnalysis = () => {
           <>
             <Text className="text-xl font-bold mb-4 text-center">Select a Form</Text>
             {loading ? (
-              <View className="flex-1 justify-center items-center">
-                <ActivityIndicator size="large" color="#6D28D9" />
-                <Text className="text-purple-700 mt-2">Loading forms...</Text>
-              </View>
+              <ActivityIndicator size="large" color="#6D28D9" />
             ) : forms.length === 0 ? (
               <Text className="text-center text-gray-500 mt-4">No forms available</Text>
             ) : (
@@ -139,9 +177,7 @@ const ResponseAnalysis = () => {
                   }}
                   className="bg-purple-100 p-4 rounded-xl mb-4"
                 >
-                  <Text className="text-lg font-semibold text-purple-900">
-                    {form.title}
-                  </Text>
+                  <Text className="text-lg font-semibold text-purple-900">{form.title}</Text>
                 </TouchableOpacity>
               ))
             )}
@@ -182,49 +218,54 @@ const ResponseAnalysis = () => {
               absolute
             />
 
-            <View className="flex-row justify-around mb-4 mt-4">
-              {["all", "pending", "reviewed", "flagged"].map((status) => (
-                <TouchableOpacity
-                  key={status}
-                  onPress={() => {
-                    setStatusFilter(status);
-                    fetchResponses(selectedFormId, status);
-                  }}
-                  className={`px-4 py-2 rounded-full ${statusFilter === status ? "bg-purple-600" : "bg-gray-200"}`}
-                >
-                  <Text className={`text-sm font-bold ${statusFilter === status ? "text-white" : "text-black"}`}>{status}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <MapView
-              className="h-56 rounded-xl mb-4"
-              initialRegion={{
-                latitude: 23.8103,
-                longitude: 90.4125,
-                latitudeDelta: 5,
-                longitudeDelta: 5,
+            {/* Chart: MPI Analysis */}
+            <Text className="text-lg font-bold text-indigo-900 mt-6 mb-2">📊 MPI Indicators</Text>
+            <PieChart
+              data={[
+                { name: "Housing", population: parseFloat(mpiStats.housing), color: "#6366f1", legendFontColor: "#444", legendFontSize: 13 },
+                { name: "Education", population: parseFloat(mpiStats.education), color: "#60a5fa", legendFontColor: "#444", legendFontSize: 13 },
+                { name: "Water", population: parseFloat(mpiStats.water), color: "#34d399", legendFontColor: "#444", legendFontSize: 13 },
+                { name: "Electricity", population: parseFloat(mpiStats.electricity), color: "#facc15", legendFontColor: "#444", legendFontSize: 13 },
+              ]}
+              width={Dimensions.get("window").width - 32}
+              height={180}
+              chartConfig={{
+                backgroundGradientFrom: "#fff",
+                backgroundGradientTo: "#fff",
+                color: () => `#4b5563`,
               }}
-            >
-              {responses.map((res, idx) => (
-                res.respondentDetails?.latitude && res.respondentDetails?.longitude && (
-                  <Marker
-                    key={idx}
-                    coordinate={{
-                      latitude: parseFloat(res.respondentDetails.latitude),
-                      longitude: parseFloat(res.respondentDetails.longitude)
-                    }}
-                    title={res.respondentDetails.name || `#${idx + 1}`}
-                    description={res.surveyName || "Untitled"}
-                  />
-                )
-              ))}
-            </MapView>
+              accessor="population"
+              backgroundColor="transparent"
+              paddingLeft="10"
+              absolute
+            />
 
+            {/* Chart: Vulnerability */}
+            <Text className="text-lg font-bold text-red-700 mt-6 mb-2">📉 Vulnerability Levels</Text>
+            <PieChart
+              data={[
+                { name: "High", population: vulnerabilityStats.high, color: "#ef4444", legendFontColor: "#444", legendFontSize: 13 },
+                { name: "Moderate", population: vulnerabilityStats.moderate, color: "#f97316", legendFontColor: "#444", legendFontSize: 13 },
+                { name: "Low", population: vulnerabilityStats.low, color: "#10b981", legendFontColor: "#444", legendFontSize: 13 },
+              ]}
+              width={Dimensions.get("window").width - 32}
+              height={180}
+              chartConfig={{
+                backgroundGradientFrom: "#fff",
+                backgroundGradientTo: "#fff",
+                color: () => `#4b5563`,
+              }}
+              accessor="population"
+              backgroundColor="transparent"
+              paddingLeft="10"
+              absolute
+            />
+
+            {/* Responses */}
             {loading ? (
               <ActivityIndicator size="large" color="#6D28D9" />
             ) : responses.length === 0 ? (
-              <Text className="text-center text-gray-500">No responses found</Text>
+              <Text className="text-center text-gray-500 mt-4">No responses found</Text>
             ) : (
               responses.map((res, idx) => (
                 <View key={idx} className="border rounded-xl p-4 mb-4 bg-gray-50">
@@ -234,9 +275,7 @@ const ResponseAnalysis = () => {
                   <Text className="text-sm text-gray-600 mb-1">
                     Division: {res.respondentDetails?.division || "N/A"} | District: {res.respondentDetails?.district || "N/A"}
                   </Text>
-                  <Text className="text-sm text-gray-600 mb-1">
-                    Survey: {res.surveyName || "Untitled"}
-                  </Text>
+                  <Text className="text-sm text-gray-600 mb-1">Survey: {res.surveyName || "Untitled"}</Text>
                   <Text className="text-sm text-gray-800 mb-1">
                     Status: {res.reviewStatus || "pending"} | Submitted: {new Date(res.createdAt).toLocaleString()}
                   </Text>

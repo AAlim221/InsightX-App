@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Modal, TextInput, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import axios from "axios";
@@ -10,12 +18,12 @@ type RootStackParamList = {
   index: undefined;
 };
 
-// User type
+// Match exact MongoDB structure
 type UserType = {
   _id: string;
   userName: string;
   email: string;
-  contactNo: string;
+  contactno: string;
   DOB: string;
   role: string;
   createdAt: string;
@@ -26,6 +34,7 @@ const ProfileCom = () => {
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState<UserType | null>(null);
   const [user, setUser] = useState<UserType | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -34,11 +43,19 @@ const ProfileCom = () => {
     const fetchUserData = async () => {
       try {
         const storedUserData = await AsyncStorage.getItem("userData");
+        console.log("🧪 Raw storedUserData:", storedUserData);
+
         if (storedUserData) {
-          setUser(JSON.parse(storedUserData));
+          const parsedData = JSON.parse(storedUserData);
+          console.log("✅ Parsed user:", parsedData);
+          setUser(parsedData);
+        } else {
+          console.warn("⚠️ No user data found in AsyncStorage.");
         }
       } catch (error) {
-        console.error("Failed to fetch user data:", error);
+        console.error("❌ Failed to fetch user data:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -46,7 +63,8 @@ const ProfileCom = () => {
   }, []);
 
   // Handle logout
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("userData");
     navigation.navigate("index");
   };
 
@@ -60,8 +78,8 @@ const ProfileCom = () => {
       if (res.status === 200) {
         Alert.alert("Updated", "Your profile has been updated.");
         setEditMode(false);
-        setUser(editedUser); // Update the user data in state
-        await AsyncStorage.setItem("userData", JSON.stringify(editedUser)); // Store updated data in AsyncStorage
+        setUser(editedUser);
+        await AsyncStorage.setItem("userData", JSON.stringify(editedUser));
       }
     } catch (err) {
       console.error(err);
@@ -82,8 +100,8 @@ const ProfileCom = () => {
               `http://192.168.0.183:8082/api/v1/auth/deleteResearcher/${user?._id}`
             );
             Alert.alert("Deleted", "Account has been deleted.");
-            await AsyncStorage.removeItem("userData"); // Remove the user data from AsyncStorage
-            navigation.navigate("index"); // Navigate to index or home screen
+            await AsyncStorage.removeItem("userData");
+            navigation.navigate("index");
           } catch (err) {
             Alert.alert("Error", "Deletion failed.");
           }
@@ -92,10 +110,17 @@ const ProfileCom = () => {
     ]);
   };
 
-  // Render the Profile modal
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#6D28D9" />
+        <Text className="mt-4 text-gray-600">Loading profile...</Text>
+      </View>
+    );
+  }
+
   return (
     <View className="flex items-center">
-      {/* Button to open profile modal */}
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         className="p-2 bg-white rounded-full"
@@ -120,8 +145,8 @@ const ProfileCom = () => {
             {[
               { label: "User Name", field: "userName" },
               { label: "Email", field: "email" },
-              { label: "Contact No", field: "contactNo" },
-              { label: "Date of Birth", field: "DOB" },
+              { label: "Contact No", field: "contactno" },
+              { label: "Date Of Birth", field: "DOB" },
               { label: "Role", field: "role" },
               { label: "ID", field: "_id" },
               { label: "Created At", field: "createdAt" },
@@ -133,8 +158,8 @@ const ProfileCom = () => {
                     className="border border-gray-300 rounded-md px-3 py-2"
                     value={editedUser?.[field as keyof UserType] || ""}
                     onChangeText={(text) =>
-                      setEditedUser((prev: any) => ({
-                        ...prev,
+                      setEditedUser((prev) => ({
+                        ...prev!,
                         [field]: text,
                       }))
                     }
@@ -159,7 +184,10 @@ const ProfileCom = () => {
               ) : (
                 <TouchableOpacity
                   className="flex-1 mr-2 bg-yellow-500 py-3 rounded-full"
-                  onPress={() => setEditMode(true)}
+                  onPress={() => {
+                    setEditMode(true);
+                    setEditedUser(user);
+                  }}
                 >
                   <Text className="text-center text-white font-bold">Edit</Text>
                 </TouchableOpacity>
