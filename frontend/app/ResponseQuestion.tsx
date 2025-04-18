@@ -43,7 +43,7 @@ const ResponseQuestion = () => {
 
   useEffect(() => {
     axios
-      .get("http://172.20.93.54:8082/api/v1/auth/listAllForms")
+      .get("http://192.168.0.183:8082/api/v1/auth/listAllForms")
       .then((response) => setForms(response.data))
       .catch((error) => {
         console.error("Error loading forms:", error);
@@ -76,7 +76,7 @@ const ResponseQuestion = () => {
 
     try {
       const response = await axios.post(
-        "http://172.20.93.54:8082/api/v1/auth/submit",
+        "http://192.168.0.183:8082/api/v1/auth/submit",
         payload,
         {
           headers: { "Content-Type": "application/json" },

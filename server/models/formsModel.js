@@ -1,6 +1,17 @@
-const mongoose = require('mongoose');
+// File: models/formsModel.js
 
-// Define the schema for Question
+const mongoose = require("mongoose");
+
+const MPISchema = new mongoose.Schema({
+  isMPIIndicator: { type: Boolean, default: false },
+  dimension: { type: String },
+  conditionType: {
+    type: String,
+    enum: ["lessThan", "greaterThan", "equals", "notEquals", "includes"],
+  },
+  value: { type: mongoose.Schema.Types.Mixed },
+}, { _id: false });
+
 const QuestionSchema = new mongoose.Schema({
   question: { type: String, required: true },
   type: {
@@ -17,41 +28,28 @@ const QuestionSchema = new mongoose.Schema({
     ],
     required: true
   },
-  options: [{ type: String }], // Optional unless required by the question type
-  minValue: { type: Number }, // For linear scale and rating
-  maxValue: { type: Number }, // For linear scale and rating
-  rows: [{ type: String }], // For multiple-choice grid and checkbox grid
-  columns: [{ type: String }],// For multiple-choice grid and checkbox grid
-   // 🔽 MPI-specific fields
-   mpi: {
-    isMPIIndicator: { type: Boolean, default: false },
-    dimension: { type: String }, // e.g., Health, Education, etc.
-    conditionType: {
-      type: String,
-      enum: ["lessThan", "greaterThan", "equals", "notEquals", "includes"],
-    },
-    value: { type: mongoose.Schema.Types.Mixed } // Accepts Number, String, Boolean
-  }
-  
-});
+  options: [{ type: String }],
+  minValue: { type: Number },
+  maxValue: { type: Number },
+  rows: [{ type: String }],
+  columns: [{ type: String }],
+  mpi: MPISchema
+}, { _id: false });
 
-// Define the schema for Form
-const FormSchema = new mongoose.Schema(
-  {
-    title: { type: String, required: true },
-    peopleDetails: {
-      name: { type: String,required: false },
-      mobile: { type: String,required: false },
-      age: { type: Number, required: false },
-      nid: { type: String, required: false },
-      division: { type: String, required: false },
-      district: { type: String, required: false }
-    },
-    surveyName: { type: String, required: false },
-    surveyDetails: { type: String, required: false },
-    questions: [QuestionSchema]
+const FormSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  researcherId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  peopleDetails: {
+    name: { type: String },
+    mobile: { type: String },
+    age: { type: Number },
+    nid: { type: String },
+    division: { type: String },
+    district: { type: String }
   },
-  { timestamps: true }
-);
+  surveyName: { type: String },
+  surveyDetails: { type: String },
+  questions: [QuestionSchema]
+}, { timestamps: true });
 
-module.exports = mongoose.model('Form', FormSchema);
+module.exports = mongoose.model("Form", FormSchema);

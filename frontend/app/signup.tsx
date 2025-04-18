@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router"; // Import useRouter
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // ✅ Import storage
 
 
 export default function Signup() {
@@ -36,9 +37,10 @@ export default function Signup() {
       }
 
       const { data } = await axios.post(
-        "http://172.20.93.54:8082/api/v1/auth/register",
+        "http://192.168.0.183:8082/api/v1/auth/register",
         { userName,email, contactNo, DOB, password, confirmPassword,role }
       );
+      await AsyncStorage.setItem("loggedInUser", JSON.stringify(data.user)); // optional
 
       alert(data && data.message);
       router.push('/'); 

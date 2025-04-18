@@ -1,113 +1,123 @@
-const axios = require('axios');
-const JWT = require('jsonwebtoken');
-const formsModel = require('../models/formsModel');
+const formsModel = require("../models/formsModel");
 
-// Create a new form
 const createForm = async (req, res) => {
   try {
-    const { title, surveyName, surveyDetails, questions, peopleDetails } = req.body;
+    const {
+      title,
+      surveyName,
+      surveyDetails,
+      questions,
+      peopleDetails,
+      researcherId
+    } = req.body;
 
-    console.log("Received Data:", req.body);
-
-    if (!title || !questions || !Array.isArray(questions)) {
-      return res.status(400).json({ error: "Missing title or questions or questions is not an array" });
+    if (!title || !questions || !Array.isArray(questions) || !researcherId) {
+      return res.status(400).json({
+        message: "Missing required fields: title, questions array, or researcherId"
+      });
     }
 
-    for (const question of questions) {
-      const { type, options, minValue, maxValue, rows, columns, mpi } = question;
+    // Clean MPI data
+    const cleanedQuestions = questions.map((q) => {
+      const cleaned = { ...q };
+      if (!cleaned.mpi || !cleaned.mpi.isMPIIndicator) {
+        delete cleaned.mpi;
+      } else {
+        // Ensure required MPI fields exist
+        if (
+          !cleaned.mpi.dimension ||
+          !cleaned.mpi.conditionType ||
+          cleaned.mpi.value === undefined
+        ) {
+          return res.status(400).json({
+            message: `MPI indicator requires dimension, conditionType, and value`
+          });
+        }
+      }
+      return cleaned;
+    });
+
+    // Validate each question
+    for (const question of cleanedQuestions) {
+      const { type, options, minValue, maxValue, rows, columns } = question;
 
       if (
-        (["multiple-choice", "checkboxes", "multiple-choice-grid", "checkbox-grid"].includes(type)) &&
+        ["multiple-choice", "checkboxes"].includes(type) &&
         (!options || options.length === 0)
       ) {
-        return res.status(400).json({ error: `Options must be provided for question type: ${type}` });
+        return res.status(400).json({
+          message: `Options are required for ${type} type`
+        });
       }
 
       if (
-        (["linear-scale", "rating"].includes(type)) &&
+        ["linear-scale", "rating"].includes(type) &&
         (minValue === undefined || maxValue === undefined)
       ) {
-        return res.status(400).json({ error: `Min and Max values must be provided for ${type}` });
+        return res.status(400).json({
+          message: `Min and Max values are required for ${type} type`
+        });
       }
 
       if (
-        (["multiple-choice-grid", "checkbox-grid"].includes(type)) &&
+        ["multiple-choice-grid", "checkbox-grid"].includes(type) &&
         (!rows || !columns || rows.length === 0 || columns.length === 0)
       ) {
-        return res.status(400).json({ error: `Rows and Columns must be provided for ${type}` });
-      }
-
-      if (mpi?.isMPIIndicator === true) {
-        if (!mpi.dimension || !mpi.conditionType || mpi.value === undefined) {
-          return res.status(400).json({
-            error: `MPI indicator questions must include 'dimension', 'conditionType', and 'value'.`
-          });
-        }
-
-        const validConditions = ["lessThan", "greaterThan", "equals", "notEquals", "includes"];
-        if (!validConditions.includes(mpi.conditionType)) {
-          return res.status(400).json({
-            error: `'conditionType' must be one of: ${validConditions.join(", ")}`
-          });
-        }
+        return res.status(400).json({
+          message: `Rows and Columns are required for ${type} type`
+        });
       }
     }
 
     const newForm = new formsModel({
       title,
+      researcherId,
       surveyName,
       surveyDetails,
       peopleDetails: peopleDetails || {},
-      questions,
+      questions: cleanedQuestions
     });
 
     await newForm.save();
 
-    res.status(201).json({ message: "Form created successfully", form: newForm });
+    res.status(201).json({
+      message: "Form created successfully",
+      form: newForm
+    });
   } catch (error) {
     console.error("Error in createForm:", error);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ message: "Server error while creating form" });
   }
-};
-
-// Get all forms
-const getAllForms = async (req, res) => {
-  try {
-    const forms = await formsModel.find();
-    res.status(200).json(forms);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch forms', error });
-  }
-};
-
-const getFormById = async (req, res) => {
-  const { formId } = req.params;
-
-  try {
-    // Query the database using the correct model
-    const form = await formsModel.findById(formId);  // Changed from Form to formsModel
-
-    if (!form) {
-      return res.status(404).json({ message: "Form not found" });
-    }
-
-    // Respond with the form data
-    res.status(200).json(form);
-  } catch (error) {
-    console.error("Error fetching form:", error);
-    res.status(500).json({ message: "Server error" });
-  }
-};
-
-
-// Placeholder for submitForm
-const submitForm = async (req, res) => {
-  res.status(200).json({ message: "Submit form not implemented yet" });
 };
 
 module.exports = {
   createForm,
-  getAllForms,
-  getFormById,
-  submitForm,
+  getAllForms: async (_, res) => {
+    try {
+      const forms = await formsModel.find();
+      res.status(200).json(forms);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch forms", error });
+    }
+  },
+  getFormById: async (req, res) => {
+    try {
+      const form = await formsModel.findById(req.params.formId);
+      if (!form) return res.status(404).json({ message: "Form not found" });
+      res.status(200).json(form);
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+    }
+  },
+  getFormsByResearcher: async (req, res) => {
+    try {
+      const forms = await formsModel.find({ researcherId: req.params.researcherId });
+      res.status(200).json(forms);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch forms", error });
+    }
+  },
+  submitForm: async (_, res) => {
+    res.status(200).json({ message: "Submit form not implemented yet" });
+  }
 };

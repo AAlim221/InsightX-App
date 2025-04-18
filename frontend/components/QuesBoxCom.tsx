@@ -148,9 +148,13 @@ const QuestionBoxCom: React.FC<QuesBoxProps> = ({
   };
 
   const onConditionValueChange = (index: number, value: string) => {
-    onMPIChange(index, "value", value);
+    const numericConditions = ["lessThan", "greaterThan"];
+    const isNumeric = numericConditions.includes(mpi.conditionType);
+  
+    const convertedValue = isNumeric ? Number(value) : value;
+    onMPIChange(index, "value", convertedValue);
   };
-
+  
   return (
     <SafeAreaView>
       <View className="mt-6 bg-white p-4 rounded-lg shadow-md">

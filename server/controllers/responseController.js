@@ -7,7 +7,17 @@ const Response = require("../models/responseModel");
 // Submit response
 const submitResponse = async (req, res) => {
   try {
-    const { formId, respondentDetails, answers } = req.body;
+    // ✅ Log incoming data
+    console.log("📩 Incoming Submission:", req.body);
+
+    const {
+      formId,
+      respondentDetails,
+      answers,
+      surveyName,
+      surveyDetails,
+      peopleDetails,
+    } = req.body;
 
     if (!formId || !answers) {
       return res.status(400).json({ message: "Form ID and answers are required." });
@@ -16,15 +26,20 @@ const submitResponse = async (req, res) => {
     const newResponse = new Response({
       formId,
       respondentDetails,
+      surveyName,
+      surveyDetails,
+      peopleDetails,
       answers,
       submittedAt: new Date(),
     });
 
     await newResponse.save();
+
+    console.log("✅ Response saved:", newResponse);
     res.status(201).json({ message: "Response submitted successfully." });
   } catch (error) {
-    console.error("Submit error:", error);
-    res.status(500).json({ message: "Failed to submit response" });
+    console.error("❌ Submit error:", error);
+    res.status(500).json({ message: "Failed to submit response", error: error.message });
   }
 };
 
@@ -57,4 +72,3 @@ module.exports = {
   getResponsesByFormId,
   getSingleResponse,
 };
-

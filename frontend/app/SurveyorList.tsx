@@ -27,7 +27,7 @@ const SurveyorList = () => {
     setLoading(true);
 
     axios
-      .get("http://172.20.93.54:8082/api/v1/auth/getAllSurveyors")
+      .get("http://192.168.0.183:8082/api/v1/auth/getAllSurveyors")
       .then((response) => {
         if (response.data.success) {
           setSurveyors(response.data.data);

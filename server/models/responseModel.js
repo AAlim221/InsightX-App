@@ -1,7 +1,3 @@
-// =======================
-// File: models/responseModel.js
-// =======================
-
 const mongoose = require("mongoose");
 
 const answerSchema = new mongoose.Schema({
@@ -30,6 +26,19 @@ const responseSchema = new mongoose.Schema(
       ref: "Form",
       required: true,
     },
+
+    // ✅ Add these fields:
+    surveyName: { type: String },
+    surveyDetails: { type: String },
+    peopleDetails: {
+      name: String,
+      mobile: String,
+      age: Number,
+      nid: String,
+      division: String,
+      district: String,
+    },
+
     respondentDetails: {
       name: { type: String, trim: true },
       age: String,
@@ -39,7 +48,9 @@ const responseSchema = new mongoose.Schema(
       district: String,
       thana: String,
     },
+
     answers: [answerSchema],
+
     reviewStatus: {
       type: String,
       enum: ["pending", "reviewed", "flagged"],
