@@ -309,7 +309,7 @@ const CreateForm = () => {
             placeholder="Survey Name"
             value={surveyName}
             onChangeText={setSurveyName}
-            className="bg-purple-400 text-white p-3 rounded-lg"
+            className="bg-purple-400 text-white p-3 rounded-lg mb-2"
           />
           <TextInput
             placeholder="Survey Details"
