@@ -39,7 +39,9 @@ export default function Login() {
         console.log("Login Success Data:", data.user);
 
         // ✅ Save in correct structure for ProfileCom
-        await AsyncStorage.setItem("userData", JSON.stringify({
+        //await AsyncStorage.setItem("userData", JSON.stringify  this fuction user profile
+          await AsyncStorage.setItem("loggedInUser", JSON.stringify
+          ({
           _id: data.user._id || "",
           userName: data.user.userName || "",
           email: data.user.email || "",

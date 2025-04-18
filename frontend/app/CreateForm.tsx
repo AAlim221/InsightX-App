@@ -49,6 +49,7 @@ const CreateForm = () => {
           const parsed = JSON.parse(userParam as string);
           setUser(parsed);
           await AsyncStorage.setItem("loggedInUser", JSON.stringify(parsed));
+          
         } catch (err) {
           console.error("Error parsing user from param");
         }
@@ -303,7 +304,7 @@ const CreateForm = () => {
             ))
           )}
         </View>
-        <View className="bg-white p-4 rounded-xl mb-4 space-y-4">
+        <View className="bg-white p-4 rounded-xl mb- space-y-4">
           <TextInput
             placeholder="Survey Name"
             value={surveyName}

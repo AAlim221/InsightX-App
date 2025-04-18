@@ -38,7 +38,7 @@ const ProfileCom = () => {
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  // Fetch user data from AsyncStorage
+  {/*// Fetch user data from AsyncStorage another system so ignore
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -60,7 +60,33 @@ const ProfileCom = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, []);*/}
+  
+
+    // 🔁 Fetch user data from AsyncStorage (Updated to use "loggedInUser" instead of "userData")
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const storedUserData = await AsyncStorage.getItem("loggedInUser"); // 🔁 CHANGED KEY NAME
+          console.log("🧪 Raw storedUserData:", storedUserData);
+  
+          if (storedUserData) {
+            const parsedData = JSON.parse(storedUserData);
+            console.log("✅ Parsed user:", parsedData);
+            setUser(parsedData);
+          } else {
+            console.warn("⚠️ No user data found in AsyncStorage.");
+          }
+        } catch (error) {
+          console.error("❌ Failed to fetch user data:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchUserData();
+    }, []);
+  
 
   // Handle logout
   const handleLogout = async () => {
