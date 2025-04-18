@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "470572551178",
+    "project_id": "insightx-app",
+    "storage_bucket": "insightx-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470572551178:android:ef7c297a6fcaf48a32e3f3",
+        "android_client_info": {
+          "package_name": "com.mahdeas.itcenter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQpI06L9gMNkRqQaUlsPLvlQgAde6fBU4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
